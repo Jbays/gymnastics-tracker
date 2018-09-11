@@ -6,6 +6,8 @@
     <a href="#" class="myButton">straddle planche</a>
     <a href="#" class="myButton">side lever</a>
     <a href="#" class="myButton">manna</a>
+    <br>
+    <br>
     <a href="#" class="myButton">single leg squat</a>
     <a href="#" class="myButton">hollow back press</a>
     <a href="#" class="myButton">rope climb</a>
