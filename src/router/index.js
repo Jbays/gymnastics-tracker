@@ -7,7 +7,16 @@ import Progressions from '@/components/Progressions';
 import Stretches from '@/components/Stretches';
 
 import FrontLever from '@/components/FrontLever';
+import StraddlePlanche from '@/components/StraddlePlanche';
+import SideLever from '@/components/SideLever';
+import Manna from '@/components/Manna';
+import SingleLegSquat from '@/components/SingleLegSquat';
+// import HollowBackPress from '@/components/HollowBackPress';
+// import RopeClimb from '@/components/RopeClimb';
+
 import FrontSplit from '@/components/FrontSplit';
+// import FrontSplit from '@/components/FrontSplit';
+// import FrontSplit from '@/components/FrontSplit';
 
 Vue.use(Router);
 
@@ -37,6 +46,26 @@ export default new Router({
       path: '/progressions/front-lever',
       name: 'FrontLever',
       component: FrontLever,
+    },
+    {
+      path: '/progressions/straddle-planche',
+      name: 'StraddlePlanche',
+      component: StraddlePlanche,
+    },
+    {
+      path: '/progressions/side-lever',
+      name: 'SideLever',
+      component: SideLever,
+    },
+    {
+      path: '/progressions/manna',
+      name: 'Manna',
+      component: Manna,
+    },
+    {
+      path: '/progressions/single-leg-squat',
+      name: 'SingleLegSquat',
+      component: SingleLegSquat,
     },
     {
       path: '/stretches/front-split',
