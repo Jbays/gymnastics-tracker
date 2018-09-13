@@ -1,31 +1,18 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <h2>Progressions</h2>
-    <a href="#" class="myButton">front lever</a>
-    <a href="#" class="myButton">straddle planche</a>
-    <a href="#" class="myButton">side lever</a>
-    <a href="#" class="myButton">manna</a>
-    <br>
-    <br>
-    <a href="#" class="myButton">single leg squat</a>
-    <a href="#" class="myButton">hollow back press</a>
-    <a href="#" class="myButton">rope climb</a>
-    <br>
-    <br>
-    <h2>Stretches</h2>
-    <a href="#" class="myButton">front split</a>
-    <a href="#" class="myButton">middle split</a>
-    <a href="#" class="myButton">thoracic bridge</a>
+    <a href="#/stretches/front-split" class="myButton">front split</a>
+    <a href="#/stretches/middle-split" class="myButton">middle split</a>
+    <a href="#/stretches/thoracic-bridge" class="myButton">thoracic bridge</a>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'Stretches',
   data() {
     return {
-      msg: 'Track Your Gymnastics',
+      msg: 'Stretches',
     };
   },
 };
