@@ -11,12 +11,12 @@ import StraddlePlanche from '@/components/StraddlePlanche';
 import SideLever from '@/components/SideLever';
 import Manna from '@/components/Manna';
 import SingleLegSquat from '@/components/SingleLegSquat';
-// import HollowBackPress from '@/components/HollowBackPress';
-// import RopeClimb from '@/components/RopeClimb';
+import HollowBackPress from '@/components/HollowBackPress';
+import RopeClimb from '@/components/RopeClimb';
 
 import FrontSplit from '@/components/FrontSplit';
-// import FrontSplit from '@/components/FrontSplit';
-// import FrontSplit from '@/components/FrontSplit';
+import MiddleSplit from '@/components/MiddleSplit';
+import ThoracicBridge from '@/components/ThoracicBridge';
 
 Vue.use(Router);
 
@@ -68,9 +68,29 @@ export default new Router({
       component: SingleLegSquat,
     },
     {
+      path: '/progressions/hollow-back-press',
+      name: 'HollowBackPress',
+      component: HollowBackPress,
+    },
+    {
+      path: '/progressions/rope-climb',
+      name: 'RopeClimb',
+      component: RopeClimb,
+    },
+    {
       path: '/stretches/front-split',
       name: 'FrontSplit',
       component: FrontSplit,
+    },
+    {
+      path: '/stretches/middle-split',
+      name: 'MiddleSplit',
+      component: MiddleSplit,
+    },
+    {
+      path: '/stretches/thoracic-bridge',
+      name: 'ThoracicBridge',
+      component: ThoracicBridge,
     },
   ],
 });

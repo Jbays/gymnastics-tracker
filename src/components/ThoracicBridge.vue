@@ -2,7 +2,7 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <h2>Progressions</h2>
-    <a href="#" class="myButton">front lever</a>
+    <a href="#" class="myButton">thoracic bridge</a>
     <h3>Today's Date: {{todaysDate}}</h3>
     <p>here is the current series of stretches!</p>
     <p>Notes I have:</p>
@@ -11,10 +11,10 @@
 
 <script>
 export default {
-  name: 'FrontSplit',
+  name: 'Thoracic Bridge',
   data() {
     return {
-      msg: 'Front Split',
+      msg: 'Thoracic Bridge',
       todaysDate: (new Date()).toDateString(),
     };
   },

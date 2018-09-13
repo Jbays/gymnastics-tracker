@@ -2,7 +2,7 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <h2>Progressions</h2>
-    <a href="#" class="myButton">front lever</a>
+    <a href="#" class="myButton">hollow back press</a>
     <h3>Today's Date: {{todaysDate}}</h3>
     <p>here is my current strength exercise:</p>
     <p>here is my current mobility exercise:</p>
@@ -14,10 +14,10 @@
 
 <script>
 export default {
-  name: 'FrontLever',
+  name: 'Hollow Back Press',
   data() {
     return {
-      msg: 'Front Lever!',
+      msg: 'Hollow Back Press!',
       todaysDate: (new Date()).toDateString(),
     };
   },
