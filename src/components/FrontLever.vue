@@ -1,14 +1,35 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
     <h2>Progressions</h2>
     <a href="#" class="myButton">front lever</a>
-    <h3>Today's Date: {{todaysDate}}</h3>
+    <h3>here is today's date {{new Date().toDateString()}}</h3>
+
+    <!-- To populate this data, I must add a database call -->
     <p>here is my current strength exercise:</p>
+    <p>here is my current strength standard:</p>
+    <br>
     <p>here is my current mobility exercise:</p>
-    <p>I completed this many strength sets/reps:</p>
-    <p>I completed this many mobility sets/reps:</p>
-    <p>Notes I have:</p>
+    <p>here is my current mobility standard:</p>
+
+    <!-- here goes form data -->
+    <form @submit.prevent='handleSubmit'>
+      <label class='label'>Completed strength sets:</label>
+      <input type='text' class='input' name='str_sets'>
+      <br>
+      <label class='label'>Completed strength reps:</label>
+      <input type='text' class='input' name='str_reps'>
+      <br>
+      <label class='label'>Completed mobility sets:</label>
+      <input type='text' class='input' name='mob_sets'>
+      <br>
+      <label class='label'>Completed mobility reps:</label>
+      <input type='text' class='input' name='mob_reps'>
+      <br>
+      <label class='label'>Notes:</label>
+      <textarea type='message' class='input' name='mob_reps'/>
+      <br>
+      <button type='submit'>Submit</button>
+    </form>
   </div>
 </template>
 
@@ -17,9 +38,22 @@ export default {
   name: 'FrontLever',
   data() {
     return {
-      msg: 'Front Lever!',
-      todaysDate: (new Date()).toDateString(),
+      user: {
+        strSets: '',
+        strReps: '',
+        mobSets: '',
+        mobReps: '',
+        notes: '',
+      },
     };
+  },
+  methods: {
+    handleSubmit(event) {
+      console.log('you submitted!');
+      for (let i = 0; i < event.srcElement.length-1; i++) {
+        console.log('event.srcElement[i].value',event.srcElement[i].value);
+      }
+    },
   },
 };
 </script>
