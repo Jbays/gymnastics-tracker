@@ -1,24 +1,37 @@
 exports.seed = (knex, Promise) =>{
   return knex('progressions_exercises').del()
     .then( () =>{
-      return knex('progressions_exercises').insert([
-        {progression_id:1,exercise_id_strength:1,exercise_id_mobility:2,sequence_number:1},
-        {progression_id:1,exercise_id_strength:3,exercise_id_mobility:4,sequence_number:2},
-        {progression_id:1,exercise_id_strength:5,exercise_id_mobility:6,sequence_number:3},
-        {progression_id:1,exercise_id_strength:7,exercise_id_mobility:8,sequence_number:4},
-        {progression_id:1,exercise_id_strength:9,exercise_id_mobility:10,sequence_number:5},
-        {progression_id:1,exercise_id_strength:11,exercise_id_mobility:12,sequence_number:6},
-        {progression_id:1,exercise_id_strength:13,exercise_id_mobility:14,sequence_number:7},
-        {progression_id:1,exercise_id_strength:15,exercise_id_mobility:16,sequence_number:8},
-        {progression_id:1,exercise_id_strength:17,exercise_id_mobility:18,sequence_number:9},
-        {progression_id:1,exercise_id_strength:19,exercise_id_mobility:20,sequence_number:10},
-        {progression_id:1,exercise_id_strength:21,exercise_id_mobility:22,sequence_number:11},
-        {progression_id:1,exercise_id_strength:23,exercise_id_mobility:24,sequence_number:12},
-        {progression_id:1,exercise_id_strength:25,exercise_id_mobility:26,sequence_number:13},
-        {progression_id:1,exercise_id_strength:27,exercise_id_mobility:28,sequence_number:14},
-        {progression_id:1,exercise_id_strength:29,exercise_id_mobility:30,sequence_number:15},
-        {progression_id:1,exercise_id_strength:31,exercise_id_mobility:32,sequence_number:16},
-        {progression_id:1,exercise_id_strength:33,exercise_id_mobility:34,sequence_number:17},
-      ]);
+      //NOTE: shifts are the number of each strength/mobility exercise per progression
+      const shifts = [17,27,25,18,30,25,27];
+      const cutsIndexes = [0,34,88,138,174,234,284];
+      return knex('exercises')
+      .select()
+      .then((allExercises)=>{
+        let allProgressions = [];
+        shifts.forEach((val,index)=>{
+          let count = 1;
+          for ( let i = cutsIndexes[index]; i < val+cutsIndexes[index]; i++ ) {
+            let obj = {
+              progression_id:index+1,
+              exercise_id_strength:null,
+              exercise_id_mobility:null,
+              sequence_number:null
+            };
+            obj.exercise_id_strength = allExercises[i].exercise_id;
+            obj.exercise_id_mobility = allExercises[i].exercise_id+shifts[index];
+            obj.sequence_number = count;
+            count++;
+            allProgressions.push(obj);
+          }
+        })
+        return allProgressions
+      })
+      .then((allProgressionsInSequence)=>{
+        return knex('progressions_exercises')
+          .insert(allProgressionsInSequence)
+          .catch((err)=>{
+            console.error('Seed error with progressions_exercises',err);
+          })
+      })
     });
   };
