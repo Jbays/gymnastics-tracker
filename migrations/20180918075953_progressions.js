@@ -1,6 +1,6 @@
 exports.up = (knex, Promise)=> {
   return knex.schema.createTable('progressions',(table)=>{
-    table.increments('progression_id');
+    table.integer('progression_id').unsigned();
     table.string('progression_name');
   })
   .catch((err)=>{
