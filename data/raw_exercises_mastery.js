@@ -1470,7 +1470,7 @@ const raw_SLS_exercise_mastery_map = [
   {
     "rope climb": "",
     "FIELD2": "negative pull-up",
-    "FIELD3": "5x5r@10s"
+    "FIELD3": "5x5rx10s@"
   },
   {
     "rope climb": "",
@@ -1750,10 +1750,21 @@ const raw_SLS_exercise_mastery_map = [
    'rope climb':7,
  }
 
+ /*
+  @name: createProgressionExercisesSeedObj
+  @description: ties together progression_id, exercise_name, and mastery_id in one object
+  @returns: array of objects
+    where output obj is {
+      progression_id:'',
+      exercise_name:'',
+      mastery_id:''
+    }
+  @param: array of arrays
+    where the nested arrays contain progression_name, exercise_name, and proficiency_standard
+ */
 
 function createProgressionExercisesSeedObjs(array){
   let output = [];
-  // console.log('this is array',array);
 
   array.forEach((nestedArr)=>{
     nestedArr.forEach((progressionExerciseMasteryObj)=>{
@@ -1762,31 +1773,44 @@ function createProgressionExercisesSeedObjs(array){
         exercise_name:'',
         mastery_id:''
       };
+      let keys = Object.keys(progressionExerciseMasteryObj);
 
-      console.log(Object.keys(progressionExerciseMasteryObj))
-
-      // if ( Object.keys(progressionExerciseMasteryObj) ){
-
-      // }
-
-      outputObj.progression_id = progression_name_to_progression_id_map[progressionExerciseMasteryObj]
-
-      //output obj should look like
-
-      // {
-      //   progression_id:1,
-      //   exercise_name:'',
-      //   mastery_id:''
-      // }
-
-      // outputObj[progression_name_to_progression_id_map]
-      console.log('progressionExerciseMasteryObj',progressionExerciseMasteryObj)
-      console.log('outputObj',outputObj)
+      outputObj.progression_id = progression_name_to_progression_id_map[keys[0]];
+      outputObj.exercise_name = progressionExerciseMasteryObj.FIELD2;
+      outputObj.mastery_id = proficiency_standard_to_mastery_id_map[progressionExerciseMasteryObj.FIELD3];
+      
       output.push(outputObj)
-    })
-    // console.log('this is nestedArr',nestedArr);
+    });
+  });
+
+  return arrayToObject(output);
+};
+
+
+/*
+  @name: arrayToObject
+  @description: converts array of objects into a single object.
+  @returns: object
+    where shape is {
+      progression_id:{
+        exercise_name:mastery_id
+      }
+    }
+    for all exercises
+  @param: array of objects
+ */
+function arrayToObject(array){
+  let output = {};
+
+  array.forEach((object)=>{
+    if ( !output.hasOwnProperty(object.progression_id) ) {
+      output[object.progression_id] = {}
+    }
+    if ( !output[object.progression_id].hasOwnProperty(object.exercise_name) ) {
+      output[object.progression_id][object.exercise_name] = object.mastery_id;
+    }
   })
   return output;
 }
 
- console.log(createProgressionExercisesSeedObjs(arrayOfAllArrays))
+module.exports = createProgressionExercisesSeedObjs(arrayOfAllArrays)
