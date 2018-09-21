@@ -1,7 +1,7 @@
 const progression_exercise_name_mastery_id_ARRAY = require('../data/raw_exercises_mastery');
 
 exports.seed = (knex, Promise) =>{
-  return knex('progressions_exercises').del()
+  return knex('progressions_exercises_mastery').del()
   .then( () =>{
     //NOTE: shifts are the number of exercise pairs per progression
     const shifts = [17,27,25,18,30,25,27];
@@ -33,10 +33,10 @@ exports.seed = (knex, Promise) =>{
       return allProgressions
     })
     .then((allProgressionsInSequence)=>{
-      return knex('progressions_exercises')
+      return knex('progressions_exercises_mastery')
         .insert(allProgressionsInSequence)
         .catch((err)=>{
-          console.error('Seed error with progressions_exercises',err);
+          console.error('Seed error with progressions_exercises_mastery',err);
         })
     })
   });

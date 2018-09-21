@@ -1,5 +1,5 @@
 exports.up = (knex, Promise)=>{
-  return knex.schema.createTable('progressions_exercises',(table)=>{
+  return knex.schema.createTable('progressions_exercises_mastery',(table)=>{
     table.integer('progression_id').unsigned();
     // table.foreign('progressions_id').references('progressions_id').inTable('progressions');
     
@@ -15,5 +15,5 @@ exports.up = (knex, Promise)=>{
 };
 
 exports.down = (knex, Promise)=>{
-  return knex.schema.dropTable('progressions_exercises');
+  return knex.schema.dropTable('progressions_exercises_mastery');
 };
