@@ -1,45 +1,22 @@
-exports.seed = function(knex, Promise) {
+exports.seed = (knex, Promise) =>{
   return knex('workouts').del()
-    .then(function () {
+    .then( () =>{
       return knex('workouts').insert([
-        // {id: 1, colName: 'rowValue1'},
-        // {id: 2, colName: 'rowValue2'},
-        // {id: 3, colName: 'rowValue3'}
+        //front lever
+        {workout_id:1,timestamp:'19 Feb 2018',progression_id:2,sequence_number:1,step_id:1,completed:true,workout_note:''},
+        {workout_id:3,timestamp:'26 Feb 2018',progression_id:2,sequence_number:2,step_id:1,completed:true,workout_note:''},
+        
+        //single leg squat
+        {workout_id:2,timestamp:'21 Feb 2018',progression_id:1,sequence_number:1,step_id:9,completed:true,workout_note:''},
+        {workout_id:4,timestamp:'28 Feb 2018',progression_id:1,sequence_number:2,step_id:9,completed:true,workout_note:''},
+        {workout_id:6,timestamp:'8 Mar 2018',progression_id:1,sequence_number:3,step_id:9,completed:true,workout_note:''},
+        
+        //manna
+        {workout_id:5,timestamp:'8 Mar 2018',progression_id:6,sequence_number:1,step_id:1,completed:true,workout_note:''},
+        {workout_id:7,timestamp:'9 Mar 2018',progression_id:6,sequence_number:1,step_id:2,completed:true,workout_note:''},
+        {workout_id:8,timestamp:'10 Mar 2018',progression_id:6,sequence_number:1,step_id:3,completed:false,workout_note:''},
+        {workout_id:9,timestamp:'11 Mar 2018',progression_id:6,sequence_number:1,step_id:3,completed:true,workout_note:''},
+
       ]);
     });
 };
-
-//TEMPLATE
-// {
-//   workout_id:1,
-//   timestamp:'19 Feb 2018',
-//   progression_id:2,
-//   sequence_number:,
-//   step_id:,
-//   completed:,
-//   workout_note:,
-// }
-
-
-//this selects the front lever progression, first exercise pair
-//select * from progressions_exercises_mastery
-// where progression_id = 2 AND
-// sequence_number = 1;
-
-//how do I connect step_id?
-
-// Bent Hollow Body Hold 3x12sCat-Cow 3x5r
-// FL
-// PE1
-// STEP1
-// Easy
-// Seated Russian Twist 3x6rStanding Hip Circle 3x10r
-// SL
-// PE1
-// STEP1
-// Easy
-// Tuck-Up 3x3rStiff Leg Windmill 3x5r
-// MN
-// PE1
-// STEP1
-// Fine
