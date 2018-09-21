@@ -42,7 +42,7 @@ exports.seed = (knex, Promise)=>{
         // {step_id:31,mastery_id:4,sets:5,reps:5,secs:null,step_sequence:9},
         // {step_id:32,mastery_id:4,sets:5,reps:5,secs:null,step_sequence:9},
         // {step_id:33,mastery_id:4,sets:5,reps:5,secs:null,step_sequence:9},
-        // {step_id:34,mastery_id:4,sets:5,reps:5,secs:null,step_sequence:9},
+        {step_id:34,mastery_id:4,sets:4,reps:5,secs:null,step_sequence:7},
         // {step_id:35,mastery_id:4,sets:5,reps:5,secs:null,step_sequence:9},
         {step_id:36,mastery_id:4,sets:5,reps:5,secs:null,step_sequence:9},
 
@@ -52,6 +52,9 @@ exports.seed = (knex, Promise)=>{
           deck squats follow a different set of steps for their 5 sets of 10 reps
           {mastery_id:5,sets:3,reps:2,secs:null,step_sequence:1}
           {mastery_id:5,sets:4,reps:4,secs:null,step_sequence:4}
+          {mastery_id:5,sets:4,reps:8,secs:null,step_sequence:7}
+          {mastery_id:5,sets:4,reps:10,secs:null,step_sequence:8}
+          {mastery_id:5,sets:5,reps:10,secs:null,step_sequence:9}
         */
 
         {step_id:37,mastery_id:5,sets:3,reps:10,secs:null,step_sequence:1},
@@ -67,12 +70,12 @@ exports.seed = (knex, Promise)=>{
         //5x10r@ -- 46 thru 54
         {step_id:46,mastery_id:6,sets:3,reps:2,secs:null,step_sequence:1},
         {step_id:47,mastery_id:6,sets:5,reps:2,secs:null,step_sequence:2},
-        // {step_id:48,mastery_id:6,sets:3,reps:2,secs:null,step_sequence:1},
-        // {step_id:49,mastery_id:6,sets:3,reps:2,secs:null,step_sequence:1},
-        // {step_id:50,mastery_id:6,sets:3,reps:2,secs:null,step_sequence:1},
-        // {step_id:51,mastery_id:6,sets:3,reps:2,secs:null,step_sequence:1},
-        // {step_id:52,mastery_id:6,sets:3,reps:2,secs:null,step_sequence:1},
-        // {step_id:53,mastery_id:6,sets:3,reps:2,secs:null,step_sequence:1},
+        {step_id:48,mastery_id:6,sets:3,reps:4,secs:null,step_sequence:3},
+        {step_id:49,mastery_id:6,sets:4,reps:4,secs:null,step_sequence:4},
+        {step_id:50,mastery_id:6,sets:4,reps:6,secs:null,step_sequence:5},
+        {step_id:51,mastery_id:6,sets:5,reps:6,secs:null,step_sequence:6},
+        {step_id:52,mastery_id:6,sets:4,reps:8,secs:null,step_sequence:7},
+        {step_id:53,mastery_id:6,sets:4,reps:10,secs:null,step_sequence:8},
         {step_id:54,mastery_id:6,sets:5,reps:10,secs:null,step_sequence:9},
         
         //5x15r -- 55 thru 63
@@ -99,13 +102,13 @@ exports.seed = (knex, Promise)=>{
         
         //5x60r -- 73 thru 81
         {step_id:73,mastery_id:9,sets:3,reps:12,secs:null,step_sequence:1},
-        // {step_id:74,mastery_id:9,sets:3,reps:12,secs:null,step_sequence:1},
-        // {step_id:75,mastery_id:9,sets:3,reps:12,secs:null,step_sequence:1},
-        // {step_id:76,mastery_id:9,sets:3,reps:12,secs:null,step_sequence:1},
-        // {step_id:77,mastery_id:9,sets:3,reps:12,secs:null,step_sequence:1},
-        // {step_id:78,mastery_id:9,sets:3,reps:12,secs:null,step_sequence:1},
-        // {step_id:79,mastery_id:9,sets:3,reps:12,secs:null,step_sequence:1},
-        // {step_id:80,mastery_id:9,sets:3,reps:12,secs:null,step_sequence:1},
+        {step_id:74,mastery_id:9,sets:5,reps:12,secs:null,step_sequence:2},
+        {step_id:75,mastery_id:9,sets:3,reps:24,secs:null,step_sequence:3},
+        {step_id:76,mastery_id:9,sets:4,reps:24,secs:null,step_sequence:4},
+        {step_id:77,mastery_id:9,sets:4,reps:36,secs:null,step_sequence:5},
+        {step_id:78,mastery_id:9,sets:5,reps:36,secs:null,step_sequence:6},
+        // {step_id:79,mastery_id:9,sets:3,reps:12,secs:null,step_sequence:7},
+        // {step_id:80,mastery_id:9,sets:3,reps:12,secs:null,step_sequence:8},
         {step_id:81,mastery_id:9,sets:5,reps:60,secs:null,step_sequence:9},
         
         //5x10s -- 82 thru 90
@@ -155,9 +158,9 @@ exports.seed = (knex, Promise)=>{
         {step_id:118,mastery_id:13,sets:5,reps:null,secs:15,step_sequence:9},
         
         //5x30s -- 119 thru 127
-        {step_id:119,mastery_id:14,sets:5,reps:null,secs:30,step_sequence:1},
+        {step_id:119,mastery_id:14,sets:3,reps:null,secs:30,step_sequence:1},
         // {step_id:120,mastery_id:14,sets:5,reps:null,secs:30,step_sequence:1},
-        // {step_id:121,mastery_id:14,sets:5,reps:null,secs:30,step_sequence:1},
+        {step_id:121,mastery_id:14,sets:5,reps:null,secs:30,step_sequence:3},
         // {step_id:122,mastery_id:14,sets:5,reps:null,secs:30,step_sequence:1},
         // {step_id:123,mastery_id:14,sets:5,reps:null,secs:30,step_sequence:1},
         // {step_id:124,mastery_id:14,sets:5,reps:null,secs:30,step_sequence:1},
@@ -178,12 +181,12 @@ exports.seed = (knex, Promise)=>{
         
         //5x60s -- 137 thru 145
         {step_id:137,mastery_id:16,sets:3,reps:null,secs:12,step_sequence:1},
-        // {step_id:138,mastery_id:16,sets:3,reps:null,secs:12,step_sequence:1},
-        // {step_id:139,mastery_id:16,sets:3,reps:null,secs:12,step_sequence:1},
-        // {step_id:140,mastery_id:16,sets:3,reps:null,secs:12,step_sequence:1},
-        // {step_id:141,mastery_id:16,sets:3,reps:null,secs:12,step_sequence:1},
-        // {step_id:142,mastery_id:16,sets:3,reps:null,secs:12,step_sequence:1},
-        // {step_id:143,mastery_id:16,sets:3,reps:null,secs:12,step_sequence:1},
+        {step_id:138,mastery_id:16,sets:5,reps:null,secs:12,step_sequence:2},
+        {step_id:139,mastery_id:16,sets:3,reps:null,secs:24,step_sequence:3},
+        {step_id:140,mastery_id:16,sets:4,reps:null,secs:24,step_sequence:4},
+        {step_id:141,mastery_id:16,sets:4,reps:null,secs:36,step_sequence:5},
+        {step_id:142,mastery_id:16,sets:5,reps:null,secs:36,step_sequence:6},
+        {step_id:143,mastery_id:16,sets:4,reps:null,secs:48,step_sequence:7},
         {step_id:144,mastery_id:16,sets:4,reps:null,secs:60,step_sequence:8},
         {step_id:145,mastery_id:16,sets:5,reps:null,secs:60,step_sequence:9},
         
