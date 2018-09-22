@@ -1701,18 +1701,130 @@ const ALL_WORKOUT_HISTORY = [
     "17 September": "",
     "19 September": ""
   }
- ];
+];
 
- function collapseArrayIntoObj(array){
+const progression_abbreviations_to_id = {
+  'SLS':1,
+  'FL':2,
+  'SL':3,
+  'sPL':4,
+  'HBP':5,
+  'MN':6,
+  'RC':7
+};
+
+//parses the sequence_number
+//will only parse correct for valid inputs!
+function mapSequenceNumber(string){
+  return string.includes('PE') ? Number(string.slice(-1)) : string;
+}
+
+function mapStepId(string){
+  console.log('this is string',string);
+  return string.include('STEP') ? Number(string.slice(-1)) : string;
+}
+
+//checks if input string any of the words --> Core, Lower Body, or Upper Body 
+function removeDashboardWords(string){
+  const dashBoardWords = new Set(['Core', 'Lower Body', 'Upper Body'])
+  
+  if ( dashBoardWords.has(string) ){
+    return '';
+  }
+
+  return string;
+}
+
+//converts 'Too Easy' and 'Easy' to true
+//and 'Fine', 'Hard', and 'Too Hard' to false
+function replaceCompletionWords(string){
+  const trueWordsSet = new Set(['Too Easy','Easy']);
+  const falseWordSet = new Set(['Fine','Hard','Too Hard']);
+
+  if ( trueWordsSet.has(string) ) {
+    return true;
+  } else if ( falseWordSet.has(string) ) {
+    return false;
+  }
+
+  return string;
+}
+
+function convertProgressionNameToId(string){
+  return (progression_abbreviations_to_id[string]) ? progression_abbreviations_to_id[string] : string;
+}
+
+
+function collapseArrayIntoObj(array){
   let output = {};
 
-  // console.log('this is array',array);
-
   array.forEach((object)=>{
-    console.log('object',object);
+    for ( key in object ) {
+      
+      if ( !output.hasOwnProperty(key) ) {
+        output[key] = [];
+      }
+      
+      // console.log('object[key]',typeof object[key]);
+      if ( typeof object[key] === 'string' && object[key].includes('x') ) {
+        break;
+      }
+
+      //filter out spurious words
+      object[key] = removeDashboardWords(object[key]);
+      //sequence_number
+      object[key] = mapSequenceNumber(object[key]);
+      
+      //step_id
+      object[key] = mapStepId(object[key]);
+
+      //progression_id
+      object[key] = convertProgressionNameToId(object[key]);
+      //completed key
+      object[key] = replaceCompletionWords(object[key]);
+
+      if ( object[key] !== '' ) {
+        output[key].push(lowerCaseStrings(object[key]));
+      }
+    }
   })
 
   return output;
- }
+}
+
+ //TEMPLATE HISTORY DATA:
+ /*
+
+  FOUNDATION 1 ==>
+  DATE:{
+    exercise pair + prescribed sets
+    progression_name
+    sequence_number
+    step_id
+    completed
+    notes:
+  }
+
+  FOUNDATION 2 AND ABOVE ==>
+  DATE:{
+    exercise pair + prescribed sets,
+    progression_name
+    sequence_number
+    step_id
+    mastery
+    completed %:
+    seconds per set
+    mobility complete:
+    notes:
+  }
+ */
+
+ //will lowercase any input string
+function lowerCaseStrings(string){
+  if ( typeof string === string ) {
+    return string.split('').map((letter)=>{return letter.toLowerCase()}).join('');
+  }
+  return string;
+}
 
  console.log(collapseArrayIntoObj(ALL_WORKOUT_HISTORY));
