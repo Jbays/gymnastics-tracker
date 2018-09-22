@@ -5,7 +5,7 @@ exports.up = (knex, Promise)=> {
     table.timestamp('timestamp');
     table.integer('progression_id');
     table.integer('sequence_number');
-    table.integer('step_id');
+    table.integer('step_sequence');
     table.boolean('completed');
     table.string('workout_note');
   })

@@ -1713,28 +1713,6 @@ const progression_abbreviations_to_id = {
   'RC':7
 };
 
-//parses the sequence_number
-//will only parse correct for valid inputs!
-function mapSequenceNumber(string){
-  return string.includes('PE') ? Number(string.slice(-1)) : string;
-}
-
-function mapStepId(string){
-  console.log('this is string',string);
-  return string.include('STEP') ? Number(string.slice(-1)) : string;
-}
-
-//checks if input string any of the words --> Core, Lower Body, or Upper Body 
-function removeDashboardWords(string){
-  const dashBoardWords = new Set(['Core', 'Lower Body', 'Upper Body'])
-  
-  if ( dashBoardWords.has(string) ){
-    return '';
-  }
-
-  return string;
-}
-
 //converts 'Too Easy' and 'Easy' to true
 //and 'Fine', 'Hard', and 'Too Hard' to false
 function replaceCompletionWords(string){
@@ -1750,81 +1728,104 @@ function replaceCompletionWords(string){
   return string;
 }
 
-function convertProgressionNameToId(string){
-  return (progression_abbreviations_to_id[string]) ? progression_abbreviations_to_id[string] : string;
-}
-
-
-function collapseArrayIntoObj(array){
-  let output = {};
-
-  array.forEach((object)=>{
+//and remove empty strings
+function sortWorkoutsByDate(array){
+  let outputObj = {};
+  
+  array.forEach((object,index)=>{
     for ( key in object ) {
+      if ( !outputObj.hasOwnProperty(key) ) {
+        outputObj[key] = {
+          array: []
+        };
+      };
       
-      if ( !output.hasOwnProperty(key) ) {
-        output[key] = [];
-      }
-      
-      // console.log('object[key]',typeof object[key]);
-      if ( typeof object[key] === 'string' && object[key].includes('x') ) {
-        break;
-      }
-
-      //filter out spurious words
-      object[key] = removeDashboardWords(object[key]);
-      //sequence_number
-      object[key] = mapSequenceNumber(object[key]);
-      
-      //step_id
-      object[key] = mapStepId(object[key]);
-
-      //progression_id
-      object[key] = convertProgressionNameToId(object[key]);
-      //completed key
-      object[key] = replaceCompletionWords(object[key]);
-
-      if ( object[key] !== '' ) {
-        output[key].push(lowerCaseStrings(object[key]));
+      if ( !filterOutUselessData(object[key]) ) {
+        outputObj[key].array.push(object[key]);
       }
     }
   })
 
-  return output;
+  return outputObj;
 }
 
- //TEMPLATE HISTORY DATA:
- /*
+//removes data useless for my workouts table
+function filterOutUselessData(string){
+  const uselessWords = new Set(['','Core','Lower Body','Upper Body','MASTERY'])
 
-  FOUNDATION 1 ==>
-  DATE:{
-    exercise pair + prescribed sets
-    progression_name
-    sequence_number
-    step_id
-    completed
-    notes:
+  if ( string.includes('Seconds per set') ) {
+    return true;
   }
 
-  FOUNDATION 2 AND ABOVE ==>
-  DATE:{
-    exercise pair + prescribed sets,
-    progression_name
-    sequence_number
-    step_id
-    mastery
-    completed %:
-    seconds per set
-    mobility complete:
-    notes:
-  }
- */
-
- //will lowercase any input string
-function lowerCaseStrings(string){
-  if ( typeof string === string ) {
-    return string.split('').map((letter)=>{return letter.toLowerCase()}).join('');
-  }
-  return string;
+  return uselessWords.has(string);
 }
 
- console.log(collapseArrayIntoObj(ALL_WORKOUT_HISTORY));
+//snips off the last letter in the STEPX for the step_sequence
+function mapStepSequence(stepString){
+  //handles that annoying edge case
+  if ( stepString === 'TESTING' ) {
+    return 1;
+  }
+  return Number(stepString.slice(-1));
+}
+
+//checks that both strength and mobility exercises were completed
+function mapCompleted(completeStr,mobilityStr){
+  if ( completeStr.includes('100') && mobilityStr.includes('Passed') ) {
+    return true;
+  }
+
+  return false;
+};
+
+//handles no notes and undefined notes. also parses the notes string
+function addNoteColumn(string){
+  if ( !string ) {
+    return '';
+  }
+
+  if ( string.includes('My Notes') ){
+    return string.slice(9);
+  }
+
+  return '';
+}
+
+function breakWorkoutsIntoSeparateObjs(obj){
+  let array = [];
+  for ( date in obj ) {
+    for ( let i = 0; i < obj[date].array.length; i++) {
+      let timestamp = !date.includes('2018') ? date+' 2018' : date;
+      let output = {
+        timestamp,
+        progression_id: progression_abbreviations_to_id[obj[date].array[i+1]],
+      };
+
+      if ( obj[date].array[i].includes('Cossack') || obj[date].array[i].includes('Side-to-Side Squat') ) {
+        output.sequence_number = Number(obj[date].array[i+2].slice(-1));
+        output.step_sequence = mapStepSequence(obj[date].array[i+3]);
+        output.completed = mapCompleted(obj[date].array[i+4],obj[date].array[i+5]);
+        output.notes = addNoteColumn(obj[date].array[i+6]);
+        
+        array.push(output);
+      } else if ( obj[date].array[i].includes('x') && !obj[date].array[i].includes('My Notes')) {
+        output.sequence_number = Number(obj[date].array[i+2].slice(-1));
+        output.step_sequence = mapStepSequence(obj[date].array[i+3]);
+        output.completed = replaceCompletionWords(obj[date].array[i+4]);
+        output.notes = addNoteColumn(obj[date].array[i+5]);
+        
+        array.push(output);
+      }
+    }
+  }
+  return array;
+}
+
+//lets try async await syntax
+function processData(array){
+  let firstPass = sortWorkoutsByDate(array);
+  
+  return breakWorkoutsIntoSeparateObjs(firstPass);
+}
+
+module.exports = processData(ALL_WORKOUT_HISTORY);
