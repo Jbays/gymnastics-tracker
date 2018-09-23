@@ -1805,14 +1805,14 @@ function breakWorkoutsIntoSeparateObjs(obj){
         output.sequence_number = Number(obj[date].array[i+2].slice(-1));
         output.step_sequence = mapStepSequence(obj[date].array[i+3]);
         output.completed = mapCompleted(obj[date].array[i+4],obj[date].array[i+5]);
-        output.notes = addNoteColumn(obj[date].array[i+6]);
+        output.workout_note = addNoteColumn(obj[date].array[i+6]);
         
         array.push(output);
       } else if ( obj[date].array[i].includes('x') && !obj[date].array[i].includes('My Notes')) {
         output.sequence_number = Number(obj[date].array[i+2].slice(-1));
         output.step_sequence = mapStepSequence(obj[date].array[i+3]);
         output.completed = replaceCompletionWords(obj[date].array[i+4]);
-        output.notes = addNoteColumn(obj[date].array[i+5]);
+        output.workout_note = addNoteColumn(obj[date].array[i+5]);
         
         array.push(output);
       }
