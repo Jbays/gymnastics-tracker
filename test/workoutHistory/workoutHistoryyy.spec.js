@@ -1,10 +1,6 @@
+const allPreviousWorkoutHistory = require('../../data/processed_workout_history');
 
-
-// beforeEach(()=>{
-//   knex('workouts').select().then((response)=>{
-//     console.log('this isnt working',response);
-//   });
-// })
+console.log('>>>>>>>>>',allPreviousWorkoutHistory);
 
 describe('all my previous workout history', () => {
   it('my first workout should...exist', () => {
