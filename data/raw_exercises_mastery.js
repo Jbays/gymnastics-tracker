@@ -716,7 +716,7 @@ const raw_SLS_exercise_mastery_map = [
   {
     "straddle planche": "",
     "FIELD2": "single-arm plank",
-    "FIELD3": "5x30s"
+    "FIELD3": "5x30s@"
   },
   {
     "straddle planche": "",
