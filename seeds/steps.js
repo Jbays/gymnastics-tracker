@@ -26,7 +26,7 @@ exports.seed = (knex, Promise)=>{
         {step_id:18,mastery_id:2,sets:5,reps:3,secs:null,step_sequence:9},
 
         //5x5r -- 19 thru 27
-        {step_id:19,mastery_id:3,sets:5,reps:3,secs:null,step_sequence:1},
+        {step_id:19,mastery_id:3,sets:3,reps:5,secs:null,step_sequence:1},
         // {step_id:20,mastery_id:3,sets:5,reps:3,secs:null,step_sequence:2},
         // {step_id:21,mastery_id:3,sets:5,reps:3,secs:null,step_sequence:3},
         {step_id:22,mastery_id:3,sets:4,reps:5,secs:null,step_sequence:4},
