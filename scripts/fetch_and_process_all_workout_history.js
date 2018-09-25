@@ -1,5 +1,6 @@
 const config = require('../knexfile')['development'];
 const knex = require('knex')(config);
+const fs = require('fs');
 
 //this works and pulls all the raw data I need!
 knex.select(
@@ -54,16 +55,26 @@ knex.select(
   let mastery = arrayToObj(everythingNeeded.pop(),'mastery_id','proficiency_standard');
   let exercises = arrayToObj(everythingNeeded.pop(),'exercise_id','exercise_name');
 
-  everythingNeeded[0].forEach((singleWorkout)=>{
-    singleWorkout.exercise_id_strength = exercises[singleWorkout.exercise_id_strength];
-    //put clause to catch undefined -- currently my full list of steps is incomplete!
-    singleWorkout.mastery_id_strength = steps[singleWorkout.mastery_id_strength][singleWorkout.step_sequence] ? steps[singleWorkout.mastery_id_strength][singleWorkout.step_sequence] : mastery[singleWorkout.mastery_id_strength];
-    singleWorkout.exercise_id_mobility = exercises[singleWorkout.exercise_id_mobility];
-    //put clause to catch undefined -- currently my full list of steps is incomplete!
-    singleWorkout.mastery_id_mobility = steps[singleWorkout.mastery_id_mobility][singleWorkout.step_sequence] ? steps[singleWorkout.mastery_id_mobility][singleWorkout.step_sequence] : mastery[singleWorkout.mastery_id_mobility]
+  let theEnd = everythingNeeded[0].map((singleWorkout)=>{
+    let output = {
+      timestamp: singleWorkout.timestamp,
+      progression_name: singleWorkout.progression_name,
+      step_number: singleWorkout.step_sequence,
+    };
+    output.strength_exercise = exercises[singleWorkout.exercise_id_strength];
+    output.strength_sets = steps[singleWorkout.mastery_id_strength][singleWorkout.step_sequence] ? steps[singleWorkout.mastery_id_strength][singleWorkout.step_sequence] : mastery[singleWorkout.mastery_id_strength];
+    output.mobility_exercise = exercises[singleWorkout.exercise_id_mobility];
+    output.mobility_sets = steps[singleWorkout.mastery_id_mobility][singleWorkout.step_sequence] ? steps[singleWorkout.mastery_id_mobility][singleWorkout.step_sequence] : mastery[singleWorkout.mastery_id_mobility]
+    output.completed = singleWorkout.completed;
+    return output;
   })
 
-  console.log('the end!',JSON.stringify(everythingNeeded));
+  let fileData = 'const ALL_WORKOUT_HISTORY = '+JSON.stringify(theEnd) + '\n module.exports=ALL_WORKOUT_HISTORY;'
+
+  fs.writeFile('data/processed_workout_history.js',fileData,(err)=>{
+    if (err) {console.error(err)};
+    console.log('Wrote all workout history in plain language');
+  })
 });
 
 //converts array of steps objects into one giant object
