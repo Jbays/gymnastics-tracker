@@ -3,6 +3,8 @@
     <h2>Progressions</h2>
     <a href="#" class="myButton">front lever</a>
     <h3>here is today's date {{new Date().toDateString()}}</h3>
+    <div v-bind='potentialAnswer'>update here>>>{{potentialAnswer}}</div>
+    <!-- <h3 v-model='potentialAnswer'>dynamic variable>>>>>{{potentialAnswer}}</h3> -->
 
     <!-- To populate this data, I must add a database call -->
     <p>here is my current strength exercise:</p>
@@ -34,18 +36,30 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'FrontLever',
-  data() {
-    return {
-      user: {
-        strSets: '',
-        strReps: '',
-        mobSets: '',
-        mobReps: '',
-        notes: '',
-      },
-    };
+  data: function(){
+    return{
+      name:'frontLever',
+      potentialAnswer: '',
+      historyRendered: false
+    }
+  },
+  beforeMount(){
+    if ( !historyRendered ){
+      console.log('i was created!>>>>');
+
+      return axios.get('http://localhost:3000/api/v1')
+        .then((response)=>{
+          console.log('this is response',response);
+          this.potentialAnswer = response.data;
+          return console.log('you did that thing!');
+        })
+
+      this.historyRendered = true;
+    }
   },
   methods: {
     handleSubmit(event) {
@@ -53,6 +67,20 @@ export default {
       for (let i = 0; i < event.srcElement.length-1; i++) {
         console.log('event.srcElement[i].value',event.srcElement[i].value);
       }
+
+      console.log(this.potentialAnswer)
+      this.potentialAnswer = 'this is the response data!';
+
+      // return axios({
+      //     method:'get',
+      //     url:'http://localhost:3000/api/v1',
+      //   })
+      return axios.get('http://localhost:3000/api/v1')
+        .then((response)=>{
+          console.log('this is response',response);
+          this.potentialAnswer = response.data;
+          return console.log('you did that thing!');
+        })
     },
   },
 };
