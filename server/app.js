@@ -19,9 +19,9 @@ app.listen(PORT,()=>{
   console.log(`Server is listening on PORT ${PORT}`);
 })
 
+//this fetches the last workout of progression_id = req.params.progression_id
+//AND user_id = req.params.user_id
 app.get('/api/v1/workouts/:user_id/:progression_id',(req,res)=>{
-  console.log('fetching',req.params);
-
   return knex('users')
     .join('users_workouts','users.user_id','=','users_workouts.user_id')
     .join('workouts','users_workouts.workout_id','=','workouts.workout_id')
@@ -33,3 +33,10 @@ app.get('/api/v1/workouts/:user_id/:progression_id',(req,res)=>{
       res.send(response.pop())
     })
 })
+
+app.post('/api/v1/workouts/:user_id/:progression_id',(req,res)=>{
+  //post to the user_workouts
+  //then post to the workouts
+})
+
+//
