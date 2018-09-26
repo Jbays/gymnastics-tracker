@@ -74,7 +74,7 @@ exports.seed = (knex, Promise)=>{
         {exercise_id:70,exercise_name:'seal pushup'},
         {exercise_id:71,exercise_name:'elbow bridge'},
         {exercise_id:72,exercise_name:'elbow bridge single leg'},
-        {exercise_id:73,exercise_name:'eblow bridge rock'},
+        {exercise_id:73,exercise_name:'elbow bridge rock'},
         {exercise_id:74,exercise_name:'low bridge'},
         {exercise_id:75,exercise_name:'low bridge single leg'},
         {exercise_id:76,exercise_name:'low bridge rock'},
