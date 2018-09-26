@@ -3,14 +3,20 @@
     <h2>Progressions</h2>
     <a href="#" class="myButton">front lever</a>
     <h3>here is today's date {{new Date().toDateString()}}</h3>
+    <div>update here>>>{{potentialAnswer}}</div>
+    <div v-if='fetchPreviousWorkout'>
+      your data is fetched!
+      <div>This was your last workout --> {{last_workout}}</div>
+      <div>Your Strength Exercise:{{exercise_strength}}</div>
+      <div>Your Mobility Exercise{{exercise_mobility}}</div>
+    </div>
+    <!-- 
+      In the future, this will be two smiley faces.
+      One happy for success.
+      One sad for failure.
 
-    <!-- To populate this data, I must add a database call -->
-    <p>here is my current strength exercise:</p>
-    <p>here is my current strength standard:</p>
-    <br>
-    <p>here is my current mobility exercise:</p>
-    <p>here is my current mobility standard:</p>
-
+      No need for the form below.
+    -->
     <!-- here goes form data -->
     <form @submit.prevent='handleSubmit'>
       <label class='label'>Completed strength sets:</label>
@@ -34,25 +40,40 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'FrontLever',
-  data() {
-    return {
-      user: {
-        strSets: '',
-        strReps: '',
-        mobSets: '',
-        mobReps: '',
-        notes: '',
-      },
-    };
+  data: function(){
+    return{
+      // name:'frontLever',
+      user_id:1,
+      progression_id:2,
+      last_workout:'',
+      potentialAnswer: '',
+      exercise_strength:'',
+      exercise_mobility:'',
+      fetchPreviousWorkout: false,
+    }
+  },
+  mounted(){
+    return axios.get(`http://localhost:3000/api/v1/workouts/${this.user_id}/${this.progression_id}`)
+      .then((response)=>{
+        this.fetchPreviousWorkout = true;
+        console.log('this is response',response);
+        this.potentialAnswer = response.data;
+        this.last_workout = response.data.timestamp.slice(0,10);
+        return console.log('you did that thing!');
+      })
   },
   methods: {
     handleSubmit(event) {
-      console.log('you submitted!');
-      for (let i = 0; i < event.srcElement.length-1; i++) {
-        console.log('event.srcElement[i].value',event.srcElement[i].value);
-      }
+      // console.log('you submitted!');
+      // for (let i = 0; i < event.srcElement.length-1; i++) {
+      //   console.log('event.srcElement[i].value',event.srcElement[i].value);
+      // }
+      // console.log(this.potentialAnswer)
+      // this.potentialAnswer = 'this is the response data!'
     },
   },
 };
