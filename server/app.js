@@ -2,7 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const PORT = process.env.PORT || '3000';
-const path = require('path');
+const config = require('../knexfile')['development'];
+const knex = require('knex')(config);
 
 const app = express();
 app.use(morgan('combined'));
@@ -18,10 +19,17 @@ app.listen(PORT,()=>{
   console.log(`Server is listening on PORT ${PORT}`);
 })
 
-app.get('/api/v1',(req,res)=>{
-  console.log('you hit the route!');
+app.get('/api/v1/workouts/:user_id/:progression_id',(req,res)=>{
+  console.log('fetching',req.params);
 
-
-
-  res.send('hello friend');
+  return knex('users')
+    .join('users_workouts','users.user_id','=','users_workouts.user_id')
+    .join('workouts','users_workouts.workout_id','=','workouts.workout_id')
+    .where('workouts.progression_id','=',req.params.progression_id)
+    .andWhere('users_workouts.user_id','=',req.params.user_id)
+    .orderBy('timestamp','last')
+    .select()
+    .then((response)=>{
+      res.send(response.pop())
+    })
 })
