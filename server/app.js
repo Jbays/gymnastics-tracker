@@ -56,7 +56,38 @@ app.get('/api/v1/workouts/today/:progression_id/:sequence_number/:step_sequence'
   
 })
 
-app.post('/api/v1/workouts/:user_id/:progression_id',(req,res)=>{
-  //post to the user_workouts
-  //then post to the workouts
+app.post('/api/v1/users_workouts/:user_id/:workout_id/',(req,res)=>{
+  console.log('hello sailor from users_workouts')
+  
+  //this is not the right way! -- but should work
+  return knex('users_workouts') 
+    .pluck('workout_id').orderBy('workout_id','desc').first()
+    .then((response)=>{
+      let newWorkoutId = response.workout_id+1;
+      
+      //this should be wrapped in a transaction
+      //<------start
+      return knex('users_workouts').insert({
+        user_id:req.params.user_id,
+        workout_id:newWorkoutId
+      }).then(()=>{
+        let date = new Date();
+        return knex('workouts').insert({
+          workout_id:Number(newWorkoutId),
+          timestamp:date,
+          progression_id:req.body.progressionId,
+          sequence_number:req.body.sequenceNumber,
+          step_sequence:req.body.stepSequence,
+          completed:req.body.completed,
+          workout_note:''
+        })
+        .then(()=>{
+          res.send("we've successfully inserted a new element");
+        })
+        .catch((err)=>{
+          console.error('this error is from inserting new workout',err);
+        })
+      })
+      //stop------>
+    })
 })

@@ -1,14 +1,13 @@
 <template>
   <div class="hello">
-    <!-- <h2>Progressions</h2> -->
-    <a href="#" class="myButton">front lever</a>
-    <h3>here is today's date {{new Date().toDateString()}}</h3>
+    <!-- <h2>Front Lever</h2> -->
     <div v-if='fetchPreviousWorkout'>
-      <h2>Yesterday's Workout!</h2>
-      <div>Date: {{lastWorkoutDate}}</div>
+      <h2>Your Last Workout!</h2>
+      <div>Date of Last Workout: {{lastWorkoutDate}}</div>
       <div>Your Last Workout>>>{{potentialAnswer}}</div>
     </div>
     <div v-if='fetchTodaysWorkout'>
+      <h3>here is today's date {{new Date().toDateString()}}</h3>
       <h1>Today's Workout!</h1>
       <div>Your Strength Exercise: {{exerciseStrength}}</div>
       <div>Strength Exercise Mastery: {{exerciseStrengthMastery}}</div>
@@ -23,10 +22,12 @@
       No need for the form below.
     -->
     <br>
-    <label for="">HOW DID YOU DO?</label>
-    <p class='emoji-feedback'>😀</p>
-    <p class='emoji-feedback'>😐</p>
-    <p class='emoji-feedback'>😖</p>
+    <div>HOW DID YOU DO?</div>
+    <p class='emoji-feedback true'>😀</p>
+    <p class='emoji-feedback false'>😐</p>
+    <p class='emoji-feedback false'>😖</p>
+    <br>
+    <a href='#/progressions' class="myButton">Back</a>
   </div>
 </template>
 
@@ -44,13 +45,15 @@ export default {
       sequenceNumber:'',
       stepSequence:'',
       lastWorkoutDate:'',
+      workoutId:'',
       potentialAnswer: '',
       exerciseStrength:'',
       exerciseStrengthMastery:'',
       exerciseMobility:'',
       exerciseMobilityMastery:'',
       fetchPreviousWorkout: false,
-      fetchTodaysWorkout:false
+      fetchTodaysWorkout:false,
+      updatedToday: false
     }
   },
   mounted(){
@@ -58,7 +61,26 @@ export default {
 
     emojisArray.forEach((singleEmoji)=>{
       singleEmoji.addEventListener('click',()=>{
+        let bool = Boolean(singleEmoji.classList[1]);
         console.log('you clicked me!');
+        
+        //this can also be simplified --> changing the method depending on the 
+        if ( !this.updatedToday ){
+          return axios.post(`http://localhost:3000/api/v1/users_workouts/${this.userId}/${this.workoutId}`,
+            {
+              progressionId:this.progressionId,
+              sequenceNumber:this.sequenceNumber,
+              sequenceNumber:this.sequenceNumber,
+              stepSequence:this.stepSequence,
+              completed:bool,
+              workoutNote:''
+            })
+            .then((response)=>{
+              console.log('you send that thing!')
+              console.log('this is your response>>>',response);
+              this.updatedToday = true;
+            })
+        }
       })
     });
 
@@ -72,11 +94,11 @@ export default {
         this.sequenceNumber = response.data.sequence_number;
         this.stepSequence = response.data.step_sequence;
         this.passedYesterday = response.data.completed;
+        this.workoutId = response.data.workout_id;
         return console.log('you fetched yesterdays workout');
       })
       //then fetch today's workout!
       .then(()=>{
-
         //NOTE: this conditional can be simplified.
         //Instead of two different api calls, just use one
         //set the variables beforehand -- depending on the conditional logic.
@@ -116,6 +138,8 @@ export default {
     },
   },
 };
+
+// function makeRandomString
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -125,6 +149,7 @@ export default {
   padding:5px;
   font-size:35px;
   margin:5px;
+  cursor:pointer;
 }
 
 h1, h2 {
