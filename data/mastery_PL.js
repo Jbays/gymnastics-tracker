@@ -1,0 +1,2 @@
+const ALL_MASTERY_IN_PLAIN_LANGUAGE = {"1":"5x1r","2":"5x3r","3":"5x5r","4":"5x5r@","5":"5x10r","6":"5x10r@","7":"5x15r","8":"5x30r","9":"5x60r","10":"5x10s","11":"5x5rx10s","12":"5x5rx10s@","13":"5x15s@","14":"5x30s","15":"5x30s@","16":"5x60s","17":"5x5/2 RC","18":"5x5/4 RC"}
+module.exports = ALL_MASTERY_IN_PLAIN_LANGUAGE

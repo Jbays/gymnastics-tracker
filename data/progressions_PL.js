@@ -1,0 +1,2 @@
+const ALL_PROGRESSIONS_IN_PLAIN_LANGUAGE = {"1":"single leg squat","2":"front lever","3":"side lever","4":"straddle planche","5":"hollow back press","6":"manna","7":"rope climb"}
+module.exports = ALL_PROGRESSIONS_IN_PLAIN_LANGUAGE
