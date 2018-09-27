@@ -3,24 +3,18 @@
     <!-- <h2>Front Lever</h2> -->
     <div v-if='fetchPreviousWorkout'>
       <h2>Your Last Workout!</h2>
-      <div>Date of Last Workout: {{lastWorkoutDate}}</div>
+      <div>Date of Last Workout: {{previous.workoutDate}}</div>
       <div>Your Last Workout>>>{{potentialAnswer}}</div>
     </div>
     <div v-if='fetchTodaysWorkout'>
       <h3>here is today's date {{new Date().toDateString()}}</h3>
       <h1>Today's Workout!</h1>
-      <div>Your Strength Exercise: {{exerciseStrength}}</div>
-      <div>Strength Exercise Mastery: {{exerciseStrengthMastery}}</div>
-      <div>Your Mobility Exercise: {{exerciseMobility}}</div>
-      <div>Mobility Exercise Mastery: {{exerciseMobilityMastery}}</div>
+      <div>Your Strength Exercise: {{today.exerciseStrength}}</div>
+      <div>Strength Exercise Mastery: {{today.exerciseStrengthMastery}}</div>
+      <div>Your Mobility Exercise: {{today.exerciseMobility}}</div>
+      <div>Mobility Exercise Mastery: {{today.exerciseMobilityMastery}}</div>
+      <div>Your Step {{today.stepSequence}}</div>
     </div>
-    <!--
-      In the future, this will be two smiley faces.
-      One happy for success.
-      One sad for failure.
-
-      No need for the form below.
-    -->
     <br>
     <div>HOW DID YOU DO?</div>
     <p class='emoji-feedback true'>😀</p>
@@ -42,104 +36,110 @@ export default {
     return{
       userId:1,
       progressionId:2,
-      sequenceNumber:'',
-      stepSequence:'',
-      lastWorkoutDate:'',
-      workoutId:'',
-      potentialAnswer: '',
-      exerciseStrength:'',
-      exerciseStrengthMastery:'',
-      exerciseMobility:'',
-      exerciseMobilityMastery:'',
       fetchPreviousWorkout: false,
       fetchTodaysWorkout:false,
-      updatedToday: false
+      updatedToday: false,
+      previous:{
+        workoutDate:null,
+        stepSequence:null,
+        sequenceNumber:null,
+        workoutId:null,
+      },
+      today:{
+        exerciseStrength:null,
+        exerciseStrengthMastery:null,
+        exerciseMobility:null,
+        exerciseMobilityMastery:null,
+        sequenceNumber:null,
+        stepSequence:null
+      },
+      potentialAnswer: '',
     }
   },
   mounted(){
-    let emojisArray = Array.from(document.getElementsByClassName('emoji-feedback'));
-
-    emojisArray.forEach((singleEmoji)=>{
-      singleEmoji.addEventListener('click',()=>{
-        let bool = Boolean(singleEmoji.classList[1]);
-        console.log('you clicked me!');
-        
-        //this can also be simplified --> changing the method depending on the 
-        if ( !this.updatedToday ){
-          return axios.post(`http://localhost:3000/api/v1/users_workouts/${this.userId}/${this.workoutId}`,
-            {
-              progressionId:this.progressionId,
-              sequenceNumber:this.sequenceNumber,
-              sequenceNumber:this.sequenceNumber,
-              stepSequence:this.stepSequence,
-              completed:bool,
-              workoutNote:''
-            })
-            .then((response)=>{
-              console.log('you send that thing!')
-              console.log('this is your response>>>',response);
-              this.updatedToday = true;
-            })
-        }
-      })
-    });
 
     //fetch previous workout
     return axios.get(`http://localhost:3000/api/v1/workouts/${this.userId}/${this.progressionId}`)
       .then((response)=>{
+        console.log('fetched previous workout!');
         console.log('this is response>>>',response);
         this.fetchPreviousWorkout = true;
         this.potentialAnswer = response.data;
-        this.lastWorkoutDate = response.data.timestamp.slice(0,10);
-        this.sequenceNumber = response.data.sequence_number;
-        this.stepSequence = response.data.step_sequence;
+        this.previous.workoutDate = response.data.timestamp.slice(0,10);
+        this.previous.sequenceNumber = response.data.sequence_number;
+        this.previous.stepSequence = response.data.step_sequence;
         this.passedYesterday = response.data.completed;
         this.workoutId = response.data.workout_id;
-        return console.log('you fetched yesterdays workout');
+        return
       })
       //then fetch today's workout!
       .then(()=>{
-        //NOTE: this conditional can be simplified.
-        //Instead of two different api calls, just use one
-        //set the variables beforehand -- depending on the conditional logic.
-        //^^simpler.
+        this.today.stepSequence = this.previous.stepSequence;
+        this.today.sequenceNumber = this.previous.sequenceNumber;
+        console.log('just finished fetching yesterdays working!');
+        console.log('now fetch todays workout!');
+        console.log('this.passedYesterday>>>>',this.passedYesterday);
+        console.log('this.previous.stepSequence>>>>',this.previous.stepSequence);
 
-        //in progression, move up one sequence of exercises
-        if ( this.passedYesterday && this.stepSequence === 9 ) {
-          return axios.get(`http://localhost:3000/api/v1/workouts/today/${this.userId}/${this.progressionId}/${this.sequenceNumber+1}/1`)
-            .then((response)=>{
-              this.fetchTodaysWorkout = true;
-              this.exerciseStrength = exercisesPL[response.data.exercise_id_strength];
-              this.exerciseMobility = exercisesPL[response.data.exercise_id_mobility];
-              this.exerciseStrengthMastery = masteryPL[response.data.mastery_id_strength];
-              this.exerciseMobilityMastery = masteryPL[response.data.mastery_id_mobility];
-            })
-        } else {
-          return axios.get(`http://localhost:3000/api/v1/workouts/today/${this.progressionId}/${this.sequenceNumber}/${this.stepSequence}`)
-            .then((response)=>{
-              console.log('this is response',response);
-              this.fetchTodaysWorkout = true;
-              this.exerciseStrength = exercisesPL[response.data.exercise_id_strength];
-              this.exerciseMobility = exercisesPL[response.data.exercise_id_mobility];
-              this.exerciseStrengthMastery = masteryPL[response.data.mastery_id_strength];
-              this.exerciseMobilityMastery = masteryPL[response.data.mastery_id_mobility];
-            })
+        //this handles when user completed the 9th step!
+        if ( this.passedYesterday &&  this.previous.stepSequence === 9 ) {
+          this.today.stepSequence = 1;
+          //eventually this will break --> when I'm done with all the exercise pairs
+          this.today.sequenceNumber = this.previous.sequenceNumber+1;
+        } else if ( this.passedYesterday ) {
+          this.today.stepSequence++;
         }
+
+        console.log('after assignment');
+        console.log('this.passedYesterday>>>>',this.passedYesterday);
+        console.log('this.today.sequenceNumber>>>>',this.today.sequenceNumber);
+        console.log('this.today.stepSequence>>>>',this.today.stepSequence);
+
+        let address = `http://localhost:3000/api/v1/workouts/today/${this.progressionId}/${this.today.sequenceNumber}/${this.today.stepSequence}`;
+
+        return axios.get(address)
+          .then((response)=>{
+            this.fetchTodaysWorkout = true;
+            this.today.exerciseStrength = exercisesPL[response.data.exercise_id_strength];
+            this.today.exerciseMobility = exercisesPL[response.data.exercise_id_mobility];
+            this.today.exerciseStrengthMastery = masteryPL[response.data.mastery_id_strength];
+            this.today.exerciseMobilityMastery = masteryPL[response.data.mastery_id_mobility];
+            
+            console.log('this worked?')
+          })
+      })
+      .then(()=>{
+        let emojisArray = Array.from(document.getElementsByClassName('emoji-feedback'));
+    
+        emojisArray.forEach((singleEmoji)=>{
+          singleEmoji.addEventListener('click',()=>{
+            let bool = Boolean(singleEmoji.classList[1]);
+            console.log('you clicked me!');
+            
+            //this can also be simplified --> changing the method depending on the 
+            if ( !this.updatedToday ){
+              console.log('this should trigger only once!');
+              return axios.post(`http://localhost:3000/api/v1/users_workouts/${this.userId}/${this.workoutId}`,
+                {
+                  progressionId:this.progressionId,
+                  sequenceNumber:this.today.sequenceNumber,
+                  stepSequence:this.today.stepSequence,
+                  completed:bool,
+                  workoutNote:''
+                })
+                .then((response)=>{
+                  console.log('you send that thing!')
+                  console.log('this is your response>>>',response);
+                  this.updatedToday = true;
+                })
+            }
+          })
+        });
       })
   },
-  methods: {
-    handleSubmit(event) {
-      // console.log('you submitted!');
-      // for (let i = 0; i < event.srcElement.length-1; i++) {
-      //   console.log('event.srcElement[i].value',event.srcElement[i].value);
-      // }
-      // console.log(this.potentialAnswer)
-      // this.potentialAnswer = 'this is the response data!'
-    },
-  },
+  methods: {},
 };
 
-// function makeRandomString
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
