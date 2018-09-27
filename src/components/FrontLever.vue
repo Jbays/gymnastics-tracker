@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <h2>Progressions</h2>
+    <!-- <h2>Progressions</h2> -->
     <a href="#" class="myButton">front lever</a>
     <h3>here is today's date {{new Date().toDateString()}}</h3>
     <div v-if='fetchPreviousWorkout'>
@@ -15,40 +15,25 @@
       <div>Your Mobility Exercise: {{exerciseMobility}}</div>
       <div>Mobility Exercise Mastery: {{exerciseMobilityMastery}}</div>
     </div>
-  </div>
-    <!-- 
+    <!--
       In the future, this will be two smiley faces.
       One happy for success.
       One sad for failure.
 
       No need for the form below.
     -->
-    <!-- here goes form data -->
-    <!-- <form @submit.prevent='handleSubmit'>
-      <label class='label'>Completed strength sets:</label>
-      <input type='text' class='input' name='str_sets'>
-      <br>
-      <label class='label'>Completed strength reps:</label>
-      <input type='text' class='input' name='str_reps'>
-      <br>
-      <label class='label'>Completed mobility sets:</label>
-      <input type='text' class='input' name='mob_sets'>
-      <br>
-      <label class='label'>Completed mobility reps:</label>
-      <input type='text' class='input' name='mob_reps'>
-      <br>
-      <label class='label'>Notes:</label>
-      <textarea type='message' class='input' name='mob_reps'/>
-      <br>
-      <button type='submit'>Submit</button>
-    </form> -->
+    <br>
+    <label for="">HOW DID YOU DO?</label>
+    <p class='emoji-feedback'>😀</p>
+    <p class='emoji-feedback'>😐</p>
+    <p class='emoji-feedback'>😖</p>
+  </div>
 </template>
 
 <script>
 import axios from 'axios';
 import exercisesPL from '../../data/exercises_PL';
 import masteryPL from '../../data/mastery_PL';
-
 
 export default {
   name: 'FrontLever',
@@ -69,6 +54,14 @@ export default {
     }
   },
   mounted(){
+    let emojisArray = Array.from(document.getElementsByClassName('emoji-feedback'));
+
+    emojisArray.forEach((singleEmoji)=>{
+      singleEmoji.addEventListener('click',()=>{
+        console.log('you clicked me!');
+      })
+    });
+
     //fetch previous workout
     return axios.get(`http://localhost:3000/api/v1/workouts/${this.userId}/${this.progressionId}`)
       .then((response)=>{
@@ -83,6 +76,12 @@ export default {
       })
       //then fetch today's workout!
       .then(()=>{
+
+        //NOTE: this conditional can be simplified.
+        //Instead of two different api calls, just use one
+        //set the variables beforehand -- depending on the conditional logic.
+        //^^simpler.
+
         //in progression, move up one sequence of exercises
         if ( this.passedYesterday && this.stepSequence === 9 ) {
           return axios.get(`http://localhost:3000/api/v1/workouts/today/${this.userId}/${this.progressionId}/${this.sequenceNumber+1}/1`)
@@ -121,6 +120,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.emoji-feedback {
+  display:inline-block;
+  padding:5px;
+  font-size:35px;
+  margin:5px;
+}
+
 h1, h2 {
   font-weight: normal;
 }
