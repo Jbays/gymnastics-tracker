@@ -108,7 +108,7 @@ exports.seed = (knex, Promise)=>{
         {step_id:77,mastery_id:9,sets:4,reps:36,secs:null,step_sequence:5},
         {step_id:78,mastery_id:9,sets:5,reps:36,secs:null,step_sequence:6},
         // {step_id:79,mastery_id:9,sets:3,reps:12,secs:null,step_sequence:7},
-        // {step_id:80,mastery_id:9,sets:3,reps:12,secs:null,step_sequence:8},
+        {step_id:80,mastery_id:9,sets:4,reps:60,secs:null,step_sequence:8},
         {step_id:81,mastery_id:9,sets:5,reps:60,secs:null,step_sequence:9},
         
         //5x10s -- 82 thru 90

@@ -6,7 +6,7 @@
     <div>update here>>>{{potentialAnswer}}</div>
     <div v-if='fetchPreviousWorkout'>
       your data is fetched!
-      <div>This was your last workout --> {{last_workout}}</div>
+      <div>This was your last workout --> {{last_workout_date}}</div>
       <div>Your Strength Exercise:{{exercise_strength}}</div>
       <div>Your Mobility Exercise{{exercise_mobility}}</div>
     </div>
@@ -41,29 +41,53 @@
 
 <script>
 import axios from 'axios';
+// import progressions_PL from '../../data/progressions_PL'
+// console.log('progressions_PL',progressions_PL)
+
 
 export default {
   name: 'FrontLever',
   data: function(){
     return{
-      // name:'frontLever',
       user_id:1,
       progression_id:2,
-      last_workout:'',
+      sequence_number:'',
+      step_sequence:'',
+      last_workout_date:'',
       potentialAnswer: '',
       exercise_strength:'',
       exercise_mobility:'',
       fetchPreviousWorkout: false,
+      passedYesterday:null,
+      // fetchTodaysWorkout: false
     }
   },
   mounted(){
+    //fetch previous workout
     return axios.get(`http://localhost:3000/api/v1/workouts/${this.user_id}/${this.progression_id}`)
       .then((response)=>{
         this.fetchPreviousWorkout = true;
-        console.log('this is response',response);
         this.potentialAnswer = response.data;
-        this.last_workout = response.data.timestamp.slice(0,10);
-        return console.log('you did that thing!');
+        this.last_workout_date = response.data.timestamp.slice(0,10);
+        this.sequence_number = response.data.sequence_number;
+        this.step_sequence = response.data.step_sequence;
+        this.passedYesterday = response.data.completed;
+        return console.log('you fetched yesterdays workout');
+      })
+      //then fetch today's workout!
+      .then(()=>{
+        //in progression, move up one sequence of exercises
+        if ( this.passedYesterday && this.step_sequence === 9 ) {
+          return axios.get(`http://localhost:3000/api/v1/workouts/today/${this.user_id}/${this.progression_id}/${this.sequence_number+1}/1`)
+            .then((response)=>{
+              // this.fetchTodaysWorkout = true;
+            })
+        } else {
+          return axios.get(`http://localhost:3000/api/v1/workouts/today/${this.progression_id}/${this.sequence_number}/${this.step_sequence}`)
+            .then((response)=>{
+
+            })
+        }
       })
   },
   methods: {
