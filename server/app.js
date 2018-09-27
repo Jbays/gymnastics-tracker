@@ -49,6 +49,9 @@ app.get('/api/v1/workouts/today/:progression_id/:sequence_number/:step_sequence'
     .select()
     .then((response)=>{
       console.log('response',response)
+      if ( response.length === 1 ) {
+        res.send(response.pop());
+      }
     })
   
 })

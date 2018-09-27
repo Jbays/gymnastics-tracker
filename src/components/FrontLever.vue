@@ -3,13 +3,19 @@
     <h2>Progressions</h2>
     <a href="#" class="myButton">front lever</a>
     <h3>here is today's date {{new Date().toDateString()}}</h3>
-    <div>update here>>>{{potentialAnswer}}</div>
     <div v-if='fetchPreviousWorkout'>
-      your data is fetched!
-      <div>This was your last workout --> {{last_workout_date}}</div>
-      <div>Your Strength Exercise:{{exercise_strength}}</div>
-      <div>Your Mobility Exercise{{exercise_mobility}}</div>
+      <h2>Yesterday's Workout!</h2>
+      <div>Date: {{lastWorkoutDate}}</div>
+      <div>Your Last Workout>>>{{potentialAnswer}}</div>
     </div>
+    <div v-if='fetchTodaysWorkout'>
+      <h1>Today's Workout!</h1>
+      <div>Your Strength Exercise: {{exerciseStrength}}</div>
+      <div>Strength Exercise Mastery: {{exerciseStrengthMastery}}</div>
+      <div>Your Mobility Exercise: {{exerciseMobility}}</div>
+      <div>Mobility Exercise Mastery: {{exerciseMobilityMastery}}</div>
+    </div>
+  </div>
     <!-- 
       In the future, this will be two smiley faces.
       One happy for success.
@@ -18,7 +24,7 @@
       No need for the form below.
     -->
     <!-- here goes form data -->
-    <form @submit.prevent='handleSubmit'>
+    <!-- <form @submit.prevent='handleSubmit'>
       <label class='label'>Completed strength sets:</label>
       <input type='text' class='input' name='str_sets'>
       <br>
@@ -35,57 +41,67 @@
       <textarea type='message' class='input' name='mob_reps'/>
       <br>
       <button type='submit'>Submit</button>
-    </form>
-  </div>
+    </form> -->
 </template>
 
 <script>
 import axios from 'axios';
-// import progressions_PL from '../../data/progressions_PL'
-// console.log('progressions_PL',progressions_PL)
+import exercisesPL from '../../data/exercises_PL';
+import masteryPL from '../../data/mastery_PL';
 
 
 export default {
   name: 'FrontLever',
   data: function(){
     return{
-      user_id:1,
-      progression_id:2,
-      sequence_number:'',
-      step_sequence:'',
-      last_workout_date:'',
+      userId:1,
+      progressionId:2,
+      sequenceNumber:'',
+      stepSequence:'',
+      lastWorkoutDate:'',
       potentialAnswer: '',
-      exercise_strength:'',
-      exercise_mobility:'',
+      exerciseStrength:'',
+      exerciseStrengthMastery:'',
+      exerciseMobility:'',
+      exerciseMobilityMastery:'',
       fetchPreviousWorkout: false,
-      passedYesterday:null,
-      // fetchTodaysWorkout: false
+      fetchTodaysWorkout:false
     }
   },
   mounted(){
     //fetch previous workout
-    return axios.get(`http://localhost:3000/api/v1/workouts/${this.user_id}/${this.progression_id}`)
+    return axios.get(`http://localhost:3000/api/v1/workouts/${this.userId}/${this.progressionId}`)
       .then((response)=>{
+        console.log('this is response>>>',response);
         this.fetchPreviousWorkout = true;
         this.potentialAnswer = response.data;
-        this.last_workout_date = response.data.timestamp.slice(0,10);
-        this.sequence_number = response.data.sequence_number;
-        this.step_sequence = response.data.step_sequence;
+        this.lastWorkoutDate = response.data.timestamp.slice(0,10);
+        this.sequenceNumber = response.data.sequence_number;
+        this.stepSequence = response.data.step_sequence;
         this.passedYesterday = response.data.completed;
         return console.log('you fetched yesterdays workout');
       })
       //then fetch today's workout!
       .then(()=>{
         //in progression, move up one sequence of exercises
-        if ( this.passedYesterday && this.step_sequence === 9 ) {
-          return axios.get(`http://localhost:3000/api/v1/workouts/today/${this.user_id}/${this.progression_id}/${this.sequence_number+1}/1`)
+        if ( this.passedYesterday && this.stepSequence === 9 ) {
+          return axios.get(`http://localhost:3000/api/v1/workouts/today/${this.userId}/${this.progressionId}/${this.sequenceNumber+1}/1`)
             .then((response)=>{
-              // this.fetchTodaysWorkout = true;
+              this.fetchTodaysWorkout = true;
+              this.exerciseStrength = exercisesPL[response.data.exercise_id_strength];
+              this.exerciseMobility = exercisesPL[response.data.exercise_id_mobility];
+              this.exerciseStrengthMastery = masteryPL[response.data.mastery_id_strength];
+              this.exerciseMobilityMastery = masteryPL[response.data.mastery_id_mobility];
             })
         } else {
-          return axios.get(`http://localhost:3000/api/v1/workouts/today/${this.progression_id}/${this.sequence_number}/${this.step_sequence}`)
+          return axios.get(`http://localhost:3000/api/v1/workouts/today/${this.progressionId}/${this.sequenceNumber}/${this.stepSequence}`)
             .then((response)=>{
-
+              console.log('this is response',response);
+              this.fetchTodaysWorkout = true;
+              this.exerciseStrength = exercisesPL[response.data.exercise_id_strength];
+              this.exerciseMobility = exercisesPL[response.data.exercise_id_mobility];
+              this.exerciseStrengthMastery = masteryPL[response.data.mastery_id_strength];
+              this.exerciseMobilityMastery = masteryPL[response.data.mastery_id_mobility];
             })
         }
       })
