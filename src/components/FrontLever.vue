@@ -4,7 +4,7 @@
     <div v-if='fetchPreviousWorkout'>
       <h2>Your Last Workout!</h2>
       <div>Date of Last Workout: {{previous.workoutDate}}</div>
-      <div>Your Last Workout>>>{{potentialAnswer}}</div>
+      <div>Your Last Workout>>>{{previousWorkout}}</div>
     </div>
     <div v-if='fetchTodaysWorkout'>
       <h3>here is today's date {{new Date().toDateString()}}</h3>
@@ -20,6 +20,9 @@
     <p class='emoji-feedback true'>😀</p>
     <p class='emoji-feedback false'>😐</p>
     <p class='emoji-feedback false'>😖</p>
+    <br>
+    <input type="text" id='workoutNotesField'>
+    <br>
     <br>
     <a href='#/progressions' class="myButton">Back</a>
   </div>
@@ -51,9 +54,10 @@ export default {
         exerciseMobility:null,
         exerciseMobilityMastery:null,
         sequenceNumber:null,
-        stepSequence:null
+        stepSequence:null,
+        workoutNote:null
       },
-      potentialAnswer: '',
+      previousWorkout: '',
     }
   },
   mounted(){
@@ -64,7 +68,7 @@ export default {
         console.log('fetched previous workout!');
         console.log('this is response>>>',response);
         this.fetchPreviousWorkout = true;
-        this.potentialAnswer = response.data;
+        this.previousWorkout = response.data;
         this.previous.workoutDate = response.data.timestamp.slice(0,10);
         this.previous.sequenceNumber = response.data.sequence_number;
         this.previous.stepSequence = response.data.step_sequence;
@@ -110,7 +114,9 @@ export default {
       })
       .then(()=>{
         let emojisArray = Array.from(document.getElementsByClassName('emoji-feedback'));
-    
+        let workoutNoteField = document.getElementById('workoutNotesField')
+
+
         emojisArray.forEach((singleEmoji)=>{
           singleEmoji.addEventListener('click',()=>{
             let bool = Boolean(singleEmoji.classList[1]);
@@ -125,7 +131,7 @@ export default {
                   sequenceNumber:this.today.sequenceNumber,
                   stepSequence:this.today.stepSequence,
                   completed:bool,
-                  workoutNote:''
+                  workoutNote:workoutNoteField.value
                 })
                 .then((response)=>{
                   console.log('you send that thing!')

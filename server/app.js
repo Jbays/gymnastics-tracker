@@ -22,7 +22,7 @@ app.listen(PORT,()=>{
 //this fetches the last workout of progression_id = req.params.progression_id
 //AND user_id = req.params.user_id
 app.get('/api/v1/workouts/:user_id/:progression_id',(req,res)=>{
-  console.log('fetching yesterdays workout');
+  // console.log('fetching yesterdays workout');
   return knex('users')
     .join('users_workouts','users.user_id','=','users_workouts.user_id')
     .join('workouts','users_workouts.workout_id','=','workouts.workout_id')
@@ -38,7 +38,7 @@ app.get('/api/v1/workouts/:user_id/:progression_id',(req,res)=>{
 //get today's workout
 app.get('/api/v1/workouts/today/:progression_id/:sequence_number/:step_sequence',(req,res)=>{
   console.log('you want todays workout too');
-  console.log(req.params);
+  console.log('req.params',req.params);
 
   return knex('progressions_exercises_mastery')
     .join('mastery','progressions_exercises_mastery.mastery_id_strength','=','mastery.mastery_id')
@@ -48,7 +48,7 @@ app.get('/api/v1/workouts/today/:progression_id/:sequence_number/:step_sequence'
     .where('steps.step_sequence','=',req.params.step_sequence)    
     .select()
     .then((response)=>{
-      console.log('response',response)
+      console.log('response about todays workout',response)
       if ( response.length === 1 ) {
         res.send(response.pop());
       }
@@ -56,6 +56,7 @@ app.get('/api/v1/workouts/today/:progression_id/:sequence_number/:step_sequence'
   
 })
 
+//post todays workout
 app.post('/api/v1/users_workouts/:user_id/:workout_id/',(req,res)=>{
   console.log('hello sailor from users_workouts')
   
@@ -79,7 +80,7 @@ app.post('/api/v1/users_workouts/:user_id/:workout_id/',(req,res)=>{
           sequence_number:req.body.sequenceNumber,
           step_sequence:req.body.stepSequence,
           completed:req.body.completed,
-          workout_note:''
+          workout_note:req.body.workoutNote
         })
         .then(()=>{
           res.send("we've successfully inserted a new element");
