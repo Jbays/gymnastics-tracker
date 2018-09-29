@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div v-if='!userSubmitted'>
     <!-- <h2>Front Lever</h2> -->
     <div v-if='fetchPreviousWorkout'>
       <h2>Your Last Workout!</h2>
@@ -25,6 +25,16 @@
     <br>
     <br>
     <a href='#/progressions' class="myButton">Back</a>
+  </div>
+  <div v-else>
+    You successfully submitted your workout!
+    <br>
+    See you tomorrow!
+
+    <div>
+      Need to revise todays workout?
+    </div>
+
   </div>
 </template>
 
@@ -58,6 +68,7 @@ export default {
         workoutNote:null
       },
       previousWorkout: '',
+      userSubmitted:false
     }
   },
   mounted(){
@@ -116,7 +127,6 @@ export default {
         let emojisArray = Array.from(document.getElementsByClassName('emoji-feedback'));
         let workoutNoteField = document.getElementById('workoutNotesField')
 
-
         emojisArray.forEach((singleEmoji)=>{
           singleEmoji.addEventListener('click',()=>{
             let bool = Boolean(singleEmoji.classList[1]);
@@ -137,6 +147,8 @@ export default {
                   console.log('you send that thing!')
                   console.log('this is your response>>>',response);
                   this.updatedToday = true;
+                  this.userSubmitted = true;
+                  this.stepSequence = response.data.stepSequence
                 })
             }
           })

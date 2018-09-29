@@ -38,21 +38,55 @@ app.get('/api/v1/workouts/:user_id/:progression_id',(req,res)=>{
 //get today's workout
 app.get('/api/v1/workouts/today/:progression_id/:sequence_number/:step_sequence',(req,res)=>{
   console.log('you want todays workout too');
-  console.log('req.params',req.params);
-
+  
   return knex('progressions_exercises_mastery')
-    .join('mastery','progressions_exercises_mastery.mastery_id_strength','=','mastery.mastery_id')
-    .where('progression_id','=',req.params.progression_id)
-    .andWhere('sequence_number','=',req.params.sequence_number)
-    .join('steps','mastery.mastery_id','=','steps.mastery_id')
-    .where('steps.step_sequence','=',req.params.step_sequence)    
-    .select()
-    .then((response)=>{
-      console.log('response about todays workout',response)
-      if ( response.length === 1 ) {
-        res.send(response.pop());
-      }
-    })
+  .join('mastery','progressions_exercises_mastery.mastery_id_strength','=','mastery.mastery_id')
+  .where('progression_id','=',req.params.progression_id)
+  .andWhere('sequence_number','=',req.params.sequence_number)
+  .join('steps','mastery.mastery_id','=','steps.mastery_id')
+  .where('steps.step_sequence','=',req.params.step_sequence)    
+  .select()
+  .then((response)=>{
+    console.log('response about todays workout',response)
+    if ( response.length === 1 ) {
+      res.send(response.pop());
+    } else {
+      console.log('couldnt find the requested step')
+      console.log('therefore, fetch the last step!');
+      console.log('req.params',req.params);
+      req.params.step_sequence = 9;
+
+      /*
+        29 Sept 2018
+          this is hacky -- but gets the job done.
+          if this get request cant find a specific step,
+          then automatically look for the ninth step in the sequence.
+
+          All ninth steps are defined.  That's why this solution works.
+
+          IN THE FUTURE:
+          I should add foundations key to the database schema.
+          Then the logic can go: 
+            if foundation === 1, search for the step (and hopefully find it)
+            if step not found, search for step+1 (until a step is found)
+            if foundation > 1, search for step 9 (the mastery standard)
+            and render a view which'll allow users to log their individual sets / reps.
+      */
+      return knex('progressions_exercises_mastery')
+        .join('mastery','progressions_exercises_mastery.mastery_id_strength','=','mastery.mastery_id')
+        .where('progression_id','=',req.params.progression_id)
+        .andWhere('sequence_number','=',req.params.sequence_number)
+        .join('steps','mastery.mastery_id','=','steps.mastery_id')
+        .where('steps.step_sequence','=',req.params.step_sequence)    
+        .select()
+        .then((response)=>{
+          if ( response.length === 1 ) {
+            console.log('whatever is this thing?',response);
+            res.send(response.pop());
+          }
+        })
+    }
+  })
   
 })
 
