@@ -20,6 +20,14 @@ exports.seed = (knex, Promise)=>{
         {mastery_id:16,proficiency_standard:"5x60s",each_side:false},
         {mastery_id:17,proficiency_standard:"5x5/2 RC",each_side:false},
         {mastery_id:18,proficiency_standard:"5x5/4 RC",each_side:false},
+        {mastery_id:19,proficiency_standard:"1x5r",each_side:false},
+        {mastery_id:20,proficiency_standard:"1x10r",each_side:false},
+        {mastery_id:21,proficiency_standard:"1x60r",each_side:false},
+        {mastery_id:22,proficiency_standard:"1x30s",each_side:false},
+        {mastery_id:23,proficiency_standard:"1x60s",each_side:false},
+        {mastery_id:24,proficiency_standard:"1x90s",each_side:false},
+        {mastery_id:25,proficiency_standard:"1x90s@",each_side:true},
+        {mastery_id:26,proficiency_standard:"1x120s",each_side:false},
       ]);
     });
   };
