@@ -126,3 +126,18 @@ app.post('/api/v1/users_workouts/:user_id/:workout_id/',(req,res)=>{
       //stop------>
     })
 })
+
+app.get('/api/v1/stretches/:progression_id',(req,res)=>{
+  console.log('hello sailor from stretches route!');
+
+  return knex('stretches_progressions_mastery')
+    .join('exercises','stretches_progressions_mastery.exercise_id','=','exercises.exercise_id')
+    .join('mastery','stretches_progressions_mastery.mastery_id','=','mastery.mastery_id')
+    .select('exercise_name','proficiency_standard')
+    .where('progression_id','=',req.params.progression_id)
+    .then((response)=>{
+      res.send(response)
+    })
+
+
+})

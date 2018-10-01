@@ -1,23 +1,56 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>Progressions</h2>
-    <a href="#" class="myButton">front lever</a>
+    <h2>Stretches - {{msg}}</h2>
+    <div v-if='fetchTodaysWorkout'>
+      <h2>This is today's workout</h2>
+      <!-- <ol id='example'>
+        this v-for doesn't work.
+        How can I get to work??
+        <li v-for='exerciseName in todaysWorkout'></li>
+      </ol> -->
+      <h3>{{todaysWorkout}}</h3>
+      <h5 v-if='todaysWorkout[0]'>
+        exercise name: {{todaysWorkout[0].exercise_name}}
+        <br>
+        standard: {{todaysWorkout[0].proficiency_standard}}
+      </h5>
+    </div>
+
     <h3>Today's Date: {{todaysDate}}</h3>
     <p>here is the current series of stretches!</p>
+    <ol>
+    </ol>
     <p>Notes I have:</p>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'FrontSplit',
   data() {
     return {
+      userId:1,
+      progressionId:8,
+      fetchTodaysWorkout:false,
+      todaysWorkout:null,
+      updatedToday:false,
       msg: 'Front Split',
       todaysDate: (new Date()).toDateString(),
     };
   },
+  methods:{
+
+  },
+  mounted(){
+    return axios.get(`http://localhost:3000/api/v1/stretches/${this.progressionId}`)
+      .then((response)=>{
+        console.log('this is response.data',response.data);
+        this.todaysWorkout = response.data;
+        this.fetchTodaysWorkout = true;
+      })
+  }
 };
 </script>
 
