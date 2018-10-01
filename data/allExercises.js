@@ -9,9 +9,9 @@ function prepForInsertionIntoExercisesTable(array,obj){
       //if the key's value is NOT blank
       //AND the first character in the keys value cannot convert to a number
       if ( key === 'front split' || key === 'middle split' || key === 'thoracic bridge' ) {
-        if ( element[key] !== '' ) {
-          if ( !obj.hasOwnProperty(element[key])) {
-            obj[element[key]] = exerciseCounter++;
+        if ( element[key].exercise_name !== '' ) {
+          if ( !obj.hasOwnProperty(element[key].exercise_name)) {
+            obj[element[key].exercise_name] = exerciseCounter++;
           }
         }
       }
@@ -30,5 +30,4 @@ function prepForInsertionIntoExercisesTable(array,obj){
 
 let insertIntoExercisesTable = prepForInsertionIntoExercisesTable(rawStretchData,exercisesInPlainLanguage)
 
-module.exports = insertIntoExercisesTable
-
+module.exports = insertIntoExercisesTable;
