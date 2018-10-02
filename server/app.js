@@ -138,6 +138,48 @@ app.get('/api/v1/stretches/:progression_id',(req,res)=>{
     .then((response)=>{
       res.send(response)
     })
+})
 
+app.get('/api/v1/stretches/:user_id/:progression_id',(req,res)=>{
+  console.log('you hit me for your stretches!')
+  let nextRoutineId = null;
 
+  //find the highest routine_id
+  return knex('routines')
+    .join('users_routines','routines.routine_id','=','users_routines.routine_id')
+    .max('routines.routine_id')
+    .then((response)=>{
+      nextRoutineId = response[0].max+1;
+      //fetch the last stretch routine in this progression
+      return knex('users_routines')
+        .where('progression_id','=',req.params.progression_id)
+        .andWhere('user_id','=',req.params.user_id)
+        .orderBy('timestamp','desc')
+        .first()
+    })
+    .then((lastStretchRoutine)=>{
+      //join the last users_routines with tables to get everything in plain language
+      return knex('routines')
+        .where('routine_id','=',lastStretchRoutine.routine_id)
+        .andWhere('progression_id','=',lastStretchRoutine.progression_id)
+        .join('stretches_progressions_mastery','stretches_progressions_mastery.stretch_sequence','=','routines.stretch_sequence')
+        .join('exercises','exercises.exercise_id','=','stretches_progressions_mastery.exercise_id')
+        .join('mastery','mastery.mastery_id','=','stretches_progressions_mastery.mastery_id')
+        .select(
+          'exercise_name',
+          'proficiency_standard',
+          'routines.stretch_sequence',
+          'completed'
+        )
+        .orderBy('stretch_sequence','asc')
+        .then((response)=>{
+          let bundle = {
+            nextRoutineId,
+            lastWorkoutTimestamp:lastStretchRoutine.timestamp,
+            routineNote:lastStretchRoutine.routine_note,
+            lastStretchRoutine:response
+          }
+          return res.send(bundle);
+        })
+    })
 })
