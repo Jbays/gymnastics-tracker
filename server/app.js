@@ -183,3 +183,40 @@ app.get('/api/v1/stretches/:user_id/:progression_id',(req,res)=>{
         })
     })
 })
+
+app.post('/api/v1/stretches/:user_id/:progression_id',(req,res)=>{
+  console.log('you tried posting a stretch routine!');
+  
+  //this should be wrapped in a transaction
+  //<----- start
+  return knex('users_routines')
+    .insert({
+      user_id:req.params.user_id,
+      routine_id:req.body.routineId,
+      timestamp:new Date(),
+      progression_id:req.params.progression_id,
+      routine_note:req.body.stretchNote
+    })
+    .select()
+    .then((response)=>{
+      let insertRoutineData = [];
+      
+      console.log('this is req.body',req.body);
+      console.log('this is req.params',req.params);
+      
+      for ( stretch in req.body.stretchResults ) {
+        // console.log('stretch',stretch)
+        // console.log('req.body.stretchResults[stretch]',req.body.stretchResults[stretch]);
+        let routineObj = {};
+        routineObj.routine_id = req.body.routineId;
+        routineObj.stretch_sequence = stretch;
+        routineObj.completed = req.body.stretchResults[stretch];
+        routineObj.stretch_sequence++;
+        insertRoutineData.push(routineObj);
+      }
+
+      return knex('routines')
+        .insert(insertRoutineData)
+    })
+  //----> end
+})

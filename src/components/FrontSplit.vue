@@ -144,6 +144,7 @@ export default {
       yourLastStretchDate:null,
       yourLastStretchRoutine:null,
       stretchResults:{
+        0:null,
         1:null,
         2:null,
         3:null,
@@ -160,8 +161,7 @@ export default {
         14:null,
         15:null,
         16:null,
-        17:null,
-        stretch_note:''
+        // stretch_note:''
       }
     };
   },
@@ -194,9 +194,8 @@ export default {
         allEmojiArray.forEach((singleEmoji,index)=>{
           let bool = singleEmoji.classList[1];
           singleEmoji.addEventListener('click',()=>{
-            let integerize = Math.round(index/2);
-            console.log('you clicked me!')
-            console.log('my corresponding bool!',bool);
+            let shift = (index % 2 === 0) ? 0 : 1;
+            let integerize = Math.round(index/2)-shift;
             console.log('this is the index',index);
             console.log('this is integerize',integerize);
             console.log('this.stretchResults[integerize]',this.stretchResults[integerize])
@@ -208,7 +207,21 @@ export default {
 
         //then click the submit button which'll send all that info
         let submitButton = document.getElementById('submitButton');
-        console.log('submitButton',submitButton);
+
+        submitButton.addEventListener('click',()=>{
+          console.log('you click submit button!')
+          let payload = {};
+          payload.stretchNote = document.getElementById('stretchRoutineNotes').value;
+          payload.routineId = this.todaysRoutineId;
+          payload.stretchResults = this.stretchResults;
+
+          console.log('this is payload',payload);
+
+          return axios.post(`http://localhost:3000/api/v1/stretches/${this.userId}/${this.progressionId}`,payload)
+            .then((response)=>{
+              console.log('returned from posting!');
+            })
+        })
 
         //insert first into the users_routines table
         //then insert into the routines
