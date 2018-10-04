@@ -138,6 +138,85 @@ app.get('/api/v1/stretches/:progression_id',(req,res)=>{
     .then((response)=>{
       res.send(response)
     })
+})
 
+app.get('/api/v1/stretches/:user_id/:progression_id',(req,res)=>{
+  console.log('you hit me for your stretches!')
+  let nextRoutineId = null;
 
+  //find the highest routine_id
+  return knex('routines')
+    .join('users_routines','routines.routine_id','=','users_routines.routine_id')
+    .max('routines.routine_id')
+    .then((response)=>{
+      nextRoutineId = response[0].max+1;
+      //fetch the last stretch routine in this progression
+      return knex('users_routines')
+        .where('progression_id','=',req.params.progression_id)
+        .andWhere('user_id','=',req.params.user_id)
+        .orderBy('timestamp','desc')
+        .first()
+    })
+    .then((lastStretchRoutine)=>{
+      //join the last users_routines with tables to get everything in plain language
+      return knex('routines')
+        .where('routine_id','=',lastStretchRoutine.routine_id)
+        .andWhere('progression_id','=',lastStretchRoutine.progression_id)
+        .join('stretches_progressions_mastery','stretches_progressions_mastery.stretch_sequence','=','routines.stretch_sequence')
+        .join('exercises','exercises.exercise_id','=','stretches_progressions_mastery.exercise_id')
+        .join('mastery','mastery.mastery_id','=','stretches_progressions_mastery.mastery_id')
+        .select(
+          'exercise_name',
+          'proficiency_standard',
+          'routines.stretch_sequence',
+          'completed'
+        )
+        .orderBy('stretch_sequence','asc')
+        .then((response)=>{
+          let bundle = {
+            nextRoutineId,
+            lastWorkoutTimestamp:lastStretchRoutine.timestamp,
+            routineNote:lastStretchRoutine.routine_note,
+            lastStretchRoutine:response
+          }
+          return res.send(bundle);
+        })
+    })
+})
+
+app.post('/api/v1/stretches/:user_id/:progression_id',(req,res)=>{
+  console.log('you tried posting a stretch routine!');
+  
+  //this should be wrapped in a transaction
+  //<----- start
+  return knex('users_routines')
+    .insert({
+      user_id:req.params.user_id,
+      routine_id:req.body.routineId,
+      timestamp:new Date(),
+      progression_id:req.params.progression_id,
+      routine_note:req.body.stretchNote
+    })
+    .select()
+    .then((response)=>{
+      let insertRoutineData = [];
+      
+      console.log('this is req.body',req.body);
+      console.log('this is req.params',req.params);
+      
+      for ( stretch in req.body.stretchResults ) {
+        // console.log('stretch',stretch)
+        // console.log('req.body.stretchResults[stretch]',req.body.stretchResults[stretch]);
+        let routineObj = {};
+        routineObj.routine_id = req.body.routineId;
+        routineObj.stretch_sequence = stretch;
+        routineObj.completed = req.body.stretchResults[stretch];
+        routineObj.stretch_sequence++;
+        insertRoutineData.push(routineObj);
+      }
+
+      return knex('routines')
+        .insert(insertRoutineData)
+    })
+  //----> end
 })
