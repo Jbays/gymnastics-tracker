@@ -1,16 +1,13 @@
 <template>
   <div class="hello">
-    you're in the loginpage!
-    <form action='http://localhost:3000/users/login' method='post'>
+    you're in user registration!
+    <form action='http://localhost:3000/users/register' method='post'>
       <input type="email" name='email' placeholder='johndoe@email.com'>
       <br>
       <input type="password" name='password' placeholder='password'>
       <br>
-      <br>
-      <input type="submit" id='login-id' value='Login' class='myButton'>
+      <input type="submit" value='Register'>
     </form>
-    <br>
-    <a href='#/register' class='myButton'>Register</a>
   </div>
 </template>
 
@@ -22,32 +19,7 @@ export default {
       msg: 'Track Your Gymnastics',
     };
   },
-  mounted(){
-    // let formData = document.getElementById('whatever');
-
-    let loginSubmit = document.getElementById('login-id');
-    console.log('loginSubmit>>>>>',loginSubmit)
-    // let registerSubmit = document.getElementById('register-id');
-
-    // loginSubmit.addEventListener('click',(event)=>{
-    // loginSubmit.addEventListener('submit',(event)=>{
-    //   console.log('you clicked me to login!');
-    //   console.log('event',event);
-    //   let formDataValue = document.getElementById('whatever').value;
-    //   console.log('formDataValue',formDataValue);
-    //   debugger;
-    // })
-
-    // registerSubmit.addEventListener('click',()=>{
-    //   console.log('you clicked me to register!');
-    // })
-
-  }
 };
-
-
-
-
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

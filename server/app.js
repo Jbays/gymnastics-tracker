@@ -4,8 +4,8 @@ const morgan = require('morgan');
 const PORT = process.env.PORT || '3000';
 const config = require('../knexfile')['development'];
 const knex = require('knex')(config);
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
+// const bcrypt = require('bcrypt');
+// const saltRounds = 10;
 
 const app = express();
 app.use(morgan('combined'));
@@ -23,7 +23,7 @@ app.listen(PORT,()=>{
 });
 
 app.post('/users/login',(req,res)=>{
-  console.log('youre trying to login or register!');
+  console.log('youre trying to login');
   console.log('this is the whole request',JSON.stringify(req.body));
 
   //search for user credentials in database.
@@ -40,6 +40,43 @@ app.post('/users/login',(req,res)=>{
         res.redirect('http://localhost:8080/#/login')
       }
     })
+})
+
+app.post('/users/register',(req,res)=>{
+  console.log('youre trying to register!')
+  console.log('this is req.body',req.body)
+
+  return knex('users')
+    .select()
+    .where('email','=',req.body.email)
+    .then((response)=>{
+      //email was found in database
+      if ( response.length === 1 ) {
+        res.redirect('http://localhost:8080/#/login')
+      }
+      if ( response.length === 0 ) {
+        return knex('users')
+          .max('user_id')
+          .then((response)=>{
+            let nextUserId = response[0].max+1;
+      
+            return knex('users')
+              .insert({
+                user_id:nextUserId,
+                email:req.body.email,
+                password:req.body.password
+              })
+          })
+          .then((response)=>{
+            res.redirect('http://localhost:8080/#/')
+          })
+          .catch((err)=>{
+            console.log('sorry bro, this is your error while creating new user',err)
+          })
+
+      }
+    })
+
 })
 
 //this fetches the last workout of progression_id = req.params.progression_id
