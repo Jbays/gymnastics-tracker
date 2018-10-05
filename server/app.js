@@ -4,9 +4,12 @@ const morgan = require('morgan');
 const PORT = process.env.PORT || '3000';
 const config = require('../knexfile')['development'];
 const knex = require('knex')(config);
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 const app = express();
 app.use(morgan('combined'));
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
 app.use((req,res,next)=>{
@@ -17,6 +20,26 @@ app.use((req,res,next)=>{
 
 app.listen(PORT,()=>{
   console.log(`Server is listening on PORT ${PORT}`);
+});
+
+app.post('/users/login',(req,res)=>{
+  console.log('youre trying to login or register!');
+  console.log('this is the whole request',JSON.stringify(req.body));
+
+  //search for user credentials in database.
+  return knex('users')
+    .select()
+    .where('email','=',req.body.email)
+    .andWhere('password','=',req.body.password)
+    .then((response)=>{
+      console.log('response>>>>',response);
+      if ( response.length === 1 ) {
+        console.log('yay, users in your database!');
+        res.redirect('http://localhost:8080/#/')
+      } else {
+        res.redirect('http://localhost:8080/#/login')
+      }
+    })
 })
 
 //this fetches the last workout of progression_id = req.params.progression_id

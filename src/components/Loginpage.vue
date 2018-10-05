@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
     you're in the loginpage!
-    <form id='whatever' action='/users/login' method='post'>
+    <form id='whatever' action='http://localhost:3000/users/login' method='post'>
       <input type="email" name='email' placeholder='johndoe@email.com'>
       <br>
       <input type="password" name='password' placeholder='password'>
