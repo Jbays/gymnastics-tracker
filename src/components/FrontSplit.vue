@@ -169,7 +169,7 @@ export default {
       todaysRoutineId:null,
       todaysWorkout:null,
       updatedToday:false,
-      userId:1,
+      userId:null,
       yourLastStretchDate:null,
       yourLastStretchRoutine:null,
     };
@@ -178,6 +178,11 @@ export default {
 
   },
   mounted(){
+    function assignUserId(cookie){
+      return cookie.split('userId=')[1]
+    }
+
+    this.userId = assignUserId(document.cookie);
     //fetches the last stretch routine of this progression_id
     return axios.get(`http://localhost:3000/api/v1/stretches/${this.userId}/${this.progressionId}`)
       .then((response)=>{

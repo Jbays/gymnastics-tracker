@@ -1,6 +1,9 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+
 import Homepage from '@/components/Homepage';
+import Loginpage from '@/components/Loginpage';
+import Register from '@/components/Register';
 
 import Calendar from '@/components/Calendar';
 import Progressions from '@/components/Progressions';
@@ -26,6 +29,16 @@ export default new Router({
       path: '/',
       name: 'Homepage',
       component: Homepage,
+    },
+    {
+      path: '/login',
+      name: 'Loginpage',
+      component: Loginpage,
+    },
+    {
+      path: '/register',
+      name: 'Register',
+      component: Register,
     },
     {
       path: '/calendar',

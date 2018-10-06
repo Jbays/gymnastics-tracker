@@ -47,7 +47,7 @@ export default {
   name: 'FrontLever',
   data: function(){
     return{
-      userId:1,
+      userId:null,
       progressionId:2,
       fetchPreviousWorkout: false,
       fetchTodaysWorkout:false,
@@ -72,6 +72,11 @@ export default {
     }
   },
   mounted(){
+    function assignUserId(cookie){
+      return cookie.split('userId=')[1];
+    }
+
+    this.userId = assignUserId(document.cookie);
 
     //fetch previous workout
     return axios.get(`http://localhost:3000/api/v1/workouts/${this.userId}/${this.progressionId}`)

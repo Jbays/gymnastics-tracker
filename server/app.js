@@ -4,10 +4,17 @@ const morgan = require('morgan');
 const PORT = process.env.PORT || '3000';
 const config = require('../knexfile')['development'];
 const knex = require('knex')(config);
+// const bcrypt = require('bcrypt');
+// const saltRounds = 10;
+// const session = require('express-session');
+// const cookieParser = require('cookie-parser');
 
 const app = express();
 app.use(morgan('combined'));
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
+// app.use(cookieParser());
+// app.use(session({ secret: 'this-is-a-secret-token', resave:true, saveUninitialized:false, cookie: { maxAge: null }}));
 
 app.use((req,res,next)=>{
   res.header("Access-Control-Allow-Origin", "*");
@@ -17,19 +24,88 @@ app.use((req,res,next)=>{
 
 app.listen(PORT,()=>{
   console.log(`Server is listening on PORT ${PORT}`);
+});
+
+app.post('/users/login',(req,res)=>{
+  console.log('youre trying to login');
+  //search for user credentials in database.
+  return knex('users')
+    .select()
+    .where('email','=',req.body.email)
+    .andWhere('password','=',req.body.password)
+    .then((response)=>{
+      console.log('response>>>>',response);
+      if ( response.length === 1 ) {
+        console.log('yay, users in your database!');
+
+        res.cookie('userId', `${response[0].user_id}`, {
+          maxAge: 1000 * 60 * 60 * 24 * 30 * 12 * 3000,
+          httpOnly: false
+        }).redirect('http://localhost:8080/#/');
+      } else {
+        res.redirect('http://localhost:8080/#/login')
+      }
+    })
+})
+
+app.post('/users/register',(req,res)=>{
+  console.log('youre trying to register!')
+  console.log('this is req.body',req.body)
+
+  return knex('users')
+    .select()
+    .where('email','=',req.body.email)
+    .then((response)=>{
+      //email was found in database
+      if ( response.length === 1 ) {
+        res.redirect('http://localhost:8080/#/login')
+      }
+      if ( response.length === 0 ) {
+        return knex('users')
+          .max('user_id')
+          .then((response)=>{
+            let nextUserId = response[0].max+1;
+      
+            return knex('users')
+              .insert({
+                user_id:nextUserId,
+                email:req.body.email,
+                password:req.body.password
+              })
+              .then(()=>{
+                res.cookie('userId', `${nextUserId}`, {
+                  maxAge: 1000 * 60 * 60 * 24 * 30 * 12 * 3000,
+                  httpOnly: false
+                }).redirect('http://localhost:8080/#/');
+              })
+              .catch((err)=>{
+                console.log('sorry bro, this is your error while creating new user',err)
+              })
+          })
+      }
+    })
+
 })
 
 //this fetches the last workout of progression_id = req.params.progression_id
 //AND user_id = req.params.user_id
 app.get('/api/v1/workouts/:user_id/:progression_id',(req,res)=>{
-  // console.log('fetching yesterdays workout');
+  console.log('fetching yesterdays workout');
   return knex('users')
     .join('users_workouts','users.user_id','=','users_workouts.user_id')
     .join('workouts','users_workouts.workout_id','=','workouts.workout_id')
     .where('workouts.progression_id','=',req.params.progression_id)
     .andWhere('users_workouts.user_id','=',req.params.user_id)
     .orderBy('timestamp','last')
-    .select()
+    .select(
+      'workouts.workout_id',
+      'timestamp',
+      'progression_id',
+      'sequence_number',
+      'step_sequence',
+      'completed',
+      'workout_note'
+    )
     .then((response)=>{
       res.send(response.pop())
     })
