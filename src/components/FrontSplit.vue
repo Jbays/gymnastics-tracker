@@ -179,7 +179,7 @@ export default {
   },
   mounted(){
     function assignUserId(cookie){
-      return cookie.split('userId=')[1]
+      return cookie.split('userId=')[1];
     }
 
     this.userId = assignUserId(document.cookie);
