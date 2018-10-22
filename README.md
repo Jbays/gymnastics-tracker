@@ -16,7 +16,7 @@ To run seed and migrations:
 Seed data are from my own gymnastics workouts.
 
 Inline-style: 
-![alt text](../src/assets/landing-page.png "Logo Title Text 1")
+![GT Landing Page](https://github.com/Jbays/gymnastics-tracker/blob/master/src/assets/landing-page.png "Landing Page")
 
 ## Build Setup
 
