@@ -1,14 +1,22 @@
 # gymnastics-tracker
 
-here I will create a full-stack app to help me track my gymnastics progress.
+Gymnastics Tracker helps users record their progress along 10 gymnastics progressions.
 
-## For each gymnastics progression, I want to
+To start backend:
+`nodemon server/app.js`
 
-1. View my progress over calendar time
-2. Log sets, reps, and notes.
-3. Receive recommendations when to graduate to next exercise set
+To start frontend:
+`npm run dev`
 
-What else?
+Front end should render @ `http://localhost:8080/#/`.
+
+To run seed and migrations:
+`knex migrate:rollback && knex migrate:latest && knex seed:run`
+
+Seed data are from my own gymnastics workouts.
+
+Inline-style: 
+![alt text](../src/assets/landing-page.png "Logo Title Text 1")
 
 ## Build Setup
 
@@ -31,5 +39,3 @@ npm run unit
 # run all tests
 npm test
 ```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
