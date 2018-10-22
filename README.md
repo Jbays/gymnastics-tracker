@@ -15,8 +15,8 @@ To run seed and migrations:
 
 Seed data are from my own gymnastics workouts.
 
-Inline-style: 
-![GT Landing Page](https://github.com/Jbays/gymnastics-tracker/blob/master/src/assets/landing-page.png "Landing Page")
+Below is the actual App Flow
+![GT App Flow](https://github.com/Jbays/gymnastics-tracker/blob/master/src/assets/app-flow.png "Landing Page")
 
 ## Build Setup
 
