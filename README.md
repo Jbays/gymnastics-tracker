@@ -16,7 +16,7 @@ To run seed and migrations:
 Seed data are from my own gymnastics workouts.
 
 Below is the actual App Flow
-![GT App Flow](https://github.com/Jbays/gymnastics-tracker/blob/master/src/assets/app-flow.png "Landing Page")
+![GT Progression Flow](https://github.com/Jbays/gymnastics-tracker/blob/master/src/assets/progression-app-flow.png "How To Use GT for Progressions")
 
 ## Build Setup
 
