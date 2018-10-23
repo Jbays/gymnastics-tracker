@@ -1,7 +1,8 @@
 # gymnastics-tracker
 
-Gymnastics Tracker helps users record their progress along 10 gymnastics progressions.
+Gymnastics Tracker helps users record their progress along 7 gymnastics progressions and 3 stretching routines.
 
+## Setup
 To start backend:
 `nodemon server/app.js`
 
@@ -15,8 +16,16 @@ To run seed and migrations:
 
 Seed data are from my own gymnastics workouts.
 
-Below is the actual App Flow
-![GT Progression Flow](https://github.com/Jbays/gymnastics-tracker/blob/master/src/assets/progression-app-flow.png "How To Use GT for Progressions")
+## Gymnastics Tracker Use Cases
+
+###First Use Case - Gymnastics Progressions
+For a given gymnastics progression, a user wants to (1) know what is their exact workout, and (2) record the results of their prescribed workout.
+![GT Progression Flow](https://github.com/Jbays/gymnastics-tracker/blob/master/src/assets/progression-example.png "How To Use GT for Progressions")
+
+###Second Use Case - Stretching Routines
+For a given stretch routine, a user wants to (1) see info from last routine, (2) view all stretches, and (3) record results for each stretch.
+![GT Stretch Routine Flow](https://github.com/Jbays/gymnastics-tracker/blob/master/src/assets/stretch-routine-example.png "How To Use GT for Stretch Routines")
+
 
 ## Build Setup
 
